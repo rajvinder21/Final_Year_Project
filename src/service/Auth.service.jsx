@@ -4,4 +4,6 @@ import { axios } from "axios";
 
 function resgister(email,password) {
     
+    ///
+    //7
 }
