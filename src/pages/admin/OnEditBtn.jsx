@@ -5,13 +5,13 @@ export default function OnEditBtn({ data, onSubmit, onNotSuccess }) {
   const [name, setName] = useState(data.cname || "")
   const [descript, setDescript] = useState(data.descript || "")
   const [done, setDone] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-        const [isError, setIsError] = useState(false)
-        let success;
-
-
+  const [isLoading, setIsLoading] = useState(false)
+  const [isError, setIsError] = useState(false)
+  let success;
+  console.log("clicgfdgfgked", data);
+  
   function onEdit(e) {
-    console.log("clicgfdgfgked", data);
+
     e.preventDefault();
     // console.log(fname, lname);
 
@@ -59,10 +59,10 @@ export default function OnEditBtn({ data, onSubmit, onNotSuccess }) {
 
     mysend()
     if (!isError) {
-      if(success) {
+      if (success) {
         setDone(true)
       }
-  
+
     }
     console.log("clicked");
 

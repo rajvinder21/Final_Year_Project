@@ -121,7 +121,7 @@ const class_id = req.headers.class_id ;
 console.log(req.headers.class_id);
 
 const user = await getMember(class_id)
-// console.log("Db member data ",user);
+console.log("Db member data ",user);
 // console.log("got requested");
 
 

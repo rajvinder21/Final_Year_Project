@@ -30,16 +30,18 @@ function Login() {
           }
         )
           .then((res) => {
-            const navigat = res.headers.navigat;
-            console.log(res, navigat)
-            if (navigat == '/dashboard') {
+            console.log(res);
+            
+            // const navigat = res.headers.navigat;
+            // console.log(res, navigat)
+            // if (navigat == '/dashboard') {
 
-              navigate('/home')
-              console.log(true);
-            }
-            else {
-              navigate("/login")
-            }
+            //   navigate('/home')
+            //   console.log(true);
+            // }
+            // else {
+            //   navigate("/login")
+            // }
 
 
 

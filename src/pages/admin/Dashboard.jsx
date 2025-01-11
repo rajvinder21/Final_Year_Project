@@ -6,7 +6,8 @@ import OnEditBtn from './OnEditBtn';
 import Float from './Float';
 import EditMember from './EditMember';
 import DeleteMember from './DeleteMember';
-import BlockMember from './BlockMember';
+
+import BlockMember from './BlockMember'
 
 
 
@@ -302,12 +303,12 @@ function Dashboard() {
     
   }
 
-  function onEditClick(cname, myid, descript) {
+  function onEditClick(row) {
     setOnEdit(true)
     setEditObj({
-      class_id: myid,
-      cname: cname,
-      descript: descript
+      class_id: row.classroom_id,
+      cname: row.cname,
+      descript: row.description
     })
   }
 
@@ -340,16 +341,16 @@ function Dashboard() {
       lname: row.lname,
       email: row.email,
       myclass: row.myclass,
-      gender: row.gemder,
+      gender: row.gender,
       class_id: row.classroom_id,
       password: row.password,
-      professor_id: row.professsor_id,
+      professor_id: row.student_id,
       block:row.block
     });
 
 
     setEditMem(true)
-   console.log(row.professsor_id);
+   console.log(row.student_id);
    
 
   }
@@ -359,7 +360,7 @@ function Dashboard() {
     setBlockMemData({
       fname: row.fname,
       lname: row.lname,
-      professor_id:row.professsor_id
+      professor_id:row.student_id
     })
   }
 
@@ -371,10 +372,10 @@ function Dashboard() {
       fname: row.fname,
       lname: row.lname,
       myclass: row.myclass,
-      professor_id: row.professsor_id
+      professor_id: row.student_id
     })
 
-    console.log(row.professsor_id);
+    console.log(row.student_id);
     
 
 
@@ -452,7 +453,7 @@ function Dashboard() {
             backgroundColor: class_id === row.classroom_id ? 'lightblue' : 'transparent',
             
             cursor: 'pointer'
-          }}>{row.cname} <p>{row.description}</p>  <div style={{ float: "right", display: "flex" }}><p onClick={() => { onDelete(row.classroom_id) }}>Delete </p><p onClick={() => { onEditClick(row.cname, row.classroom_id, row.description) }}> Edit</p> </div> </li>)}
+          }}>{row.cname} <p>{row.description}</p>  <div style={{ float: "right", display: "flex" }}><p onClick={() => { onDelete(row.classroom_id) }}>Delete </p><p onClick={() => { onEditClick(row) }}> Edit</p> </div> </li>)}
         </ul>
 
         <div>
@@ -525,18 +526,18 @@ function Dashboard() {
             </tr>
           </thead>
           <tbody>
-            {(getMemberr.length == 0) ? <tr ><td>not created any classroom</td></tr> : getMemberr.map((row, id) => <tr key={id} onClick={() => { rowSelect(row.professsor_id) }} style={{
+            {(getMemberr.length == 0) ? <tr ><td>not created any classroom</td></tr> : getMemberr.map((row, id) => <tr key={id} onClick={() => { rowSelect(row.student_id) }} style={{
               padding: '10px',
-              backgroundColor: rowid === row.professsor_id ? 'lightblue' : 'transparent',
+              backgroundColor: rowid === row.student_id ? 'lightblue' : 'transparent',
               backgroundColor: row.block === "block" ? 'red': "none",
               cursor: 'pointer',
             }}  >
               <td>{row.fname}</td>
               <td>{row.lname}</td>
-              <td>{row.gemder}</td>
+              <td>{row.gender}</td>
               <td>{row.email}</td>
               <td>{row.password}</td>
-              <td>{(row.professsor_id && typeof row.professsor_id === 'string' && row.professsor_id.slice(0, 4) === "prof")
+              <td>{(row.student_id && typeof row.student_id === 'string' && row.student_id.slice(0, 4) === "prof")
                 ? "Professor"
                 : "Student"}</td>
               <td onClick={() => { onEditRow(row) }} >edit</td>

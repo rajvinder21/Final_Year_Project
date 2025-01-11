@@ -35,7 +35,6 @@ app.use("/signup-details", signupDetails)
 
 app.use('/admin-login',adminLogin)
 
-
 // normal login route
 app.use("/login", login)
 
@@ -44,6 +43,15 @@ app.use("/login", login)
 
 app.use("/dashboard", adminAuth, dashboard)
 
+
+// classrom 
+
+app.get("/classroom", (res,req)=>{
+
+  console.log("hello we are here ");
+  
+  res.send()
+})
 
 
 

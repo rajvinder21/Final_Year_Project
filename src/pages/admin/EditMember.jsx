@@ -9,7 +9,7 @@ export default function EditMember({data, onEditMemberCancel}) {
       const [Mgender, setMGender] = useState(data.gender);
       const [Mmyclass, setMMyclass] = useState(data.myclass);
 
-      let role = (data.professor_id && typeof data.professor_id === 'string' && data.professor_id.slice(0, 4) === "prof")
+      let role = (data.student_id && typeof data.student_id === 'string' && data.student_id.slice(0, 4) === "prof")
       ? "Professor"
       : "Student" ;
       const [Mrole, setMRole] = useState(role);
