@@ -1,0 +1,82 @@
+
+router.post("/createPost", upload.single("file"), async (req, res) => {
+  const class_id = req.body.classroom_id;
+  const title = req.body.title;
+  const descript = req.body.descript;
+  const professor_id = req.body.professor_id;
+  const file = req.file;
+
+  const GOFILE_API_TOKEN = "KIWR83t0lxxWvqWMxTpxQTQmQAW3mmWK";
+  const fileId = "fd231599-0a19-4766-a5ad-48d2111f122b";
+
+  // const result = await getMember(class_id);
+
+  if (!req.file) {
+    // console.log("hello we are here", req.file.path);
+
+    const serverResponse = await axios.get('https://api.gofile.io/servers');
+    const serverUrl = serverResponse.data.data.serversAllZone[0].name;
+
+    const response = await axios.get("https://store7.gofile.io/download/fd231599-0a19-4766-a5ad-48d2111f122b", { responseType: 'stream' }, {
+      headers:{
+        "Authorization":`Bearer ${GOFILE_API_TOKEN}`
+      }
+    });
+    const writer = fs.createWriteStream("C:/Users/rajvi/OneDrive/Documents/01 Final Year Project/#Project/Virtual Classroom/virtual-app/server/service");
+    response.data.pipe(writer);
+
+    writer.on('finish', () => {
+        console.log('File downloaded successfully:');
+    });
+
+    writer.on('error', (err) => {
+      console.error('Error writing file:', err);
+  });
+
+    // console.log("res", serverResponse.data.data.serversAllZone[0].name);
+
+  //   const filePath =  req.file.path;
+  //   const fileStream = fs.createReadStream(filePath);
+
+  //   const formData = new FormData();
+
+  // formData.append("file", fileStream);
+  // console.log(fileStream);
+
+
+ 
+
+  //   const goFileUpload = await axios.post(`https://${serverUrl}.gofile.io/contents/uploadfile`, {file:fs.createReadStream(filePath), folderId:"a0ed9a6e-751f-4ce5-891e-37e0b06ba697"  } , {
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //       "Authorization":`Bearer ${GOFILE_API_TOKEN}`
+
+  //     },
+  //   });
+
+
+    // console.log("we iissue",goFileUpload.data.data.id,goFileUpload.data.data.id );
+
+    res.status(200)
+    res.send()
+
+
+  }
+
+  else {
+    console.log("no file upload");
+
+
+    res.status(200)
+    res.send()
+
+  }
+
+  // console.log(`File Name: ${file.name}`);
+  // console.log(`File Size: ${file.size}`);
+  // console.log(`File Mime Type: ${file.mimetype}`);
+
+   
+
+
+})

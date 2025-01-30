@@ -3,6 +3,7 @@ import mysql from "mysql2";
 import bodyParser from "body-parser";
 import cors from "cors"
 import cookieParser from "cookie-parser";
+
 const app = express();
 const PORT = 8080;
 // app.use(express.static('build'))
@@ -16,9 +17,11 @@ import home from "./routes/home.js"
 
 import adminLogin from "./routes/signups/admin-login.js"
 import dashboard from "./routes/admin/dashboard.js";
-import signupVerify from "./routes/signups/signupVerify.js"
+import signupVerify from "./routes/signups/signupVerify.js";
+import classroom from "./routes/member/classroom.js"
 
 import { adminAuth } from "./routes/Auth/authMiddleware.js";
+import video from "./routes/videocall/video.js"
 
 
 
@@ -46,13 +49,9 @@ app.use("/dashboard", adminAuth, dashboard)
 
 // classrom 
 
-app.get("/classroom", (res,req)=>{
+app.use("/classroom",adminAuth,classroom)
 
-  console.log("hello we are here ");
-  
-  res.send()
-})
-
+app.use('/videocall',video)
 
 
 

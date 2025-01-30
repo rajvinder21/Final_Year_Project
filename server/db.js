@@ -183,6 +183,10 @@ async function delProfessor(professor_id) {
   return result
 }
 
+
+
+//////////////NormaL user code 
+
 async function login(email,password) {
   const [result] = await pool.query(`SELECT * FROM (SELECT * FROM students UNION ALL SELECT * FROM professors) AS combined_users
 WHERE email = ? AND password = ? ;`,[email,password])  
@@ -190,13 +194,49 @@ WHERE email = ? AND password = ? ;`,[email,password])
 return result ;
 }
 
+async function getMemberClassroom(member_id) {
+  const result = await pool.query(`SELECT * FROM classroom_admin
+WHERE classroom_id IN (SELECT classroom_id FROM member_participants WHERE member_id = ? );`,[member_id] )
+return result
+}
+
+async function createPostWithFile(post_id,class_id,title,descript,link,filename, author, date) {
+
+  const result = await pool.query(`INSERT INTO posts(post_id,classroom_id,title,description,link,file_name,author,date) VALUES(?,?,?,?,?,?,?,?)`, [post_id,class_id,title,descript,link,filename, author, date])
+  return result
+}
+
+async function createAssignment(assign_id,class_id,title,descript,link,filename, author, date,submission) {
+
+  const result = await pool.query(`INSERT INTO assignments(assign_id,classroom_id,title,description,link,file_name,author,date,submission) VALUES(?,?,?,?,?,?,?,?,?)`, [assign_id,class_id,title,descript,link,filename, author, date,submission])
+  return result
+}
+
+async function getPosts(class_id) {
+  const result = await pool.query(`SELECT * FROM posts WHERE classroom_id = ?`,[class_id])
+  return result ;
+}
+
+async function getAssignments(class_id) {
+  const result = await pool.query(`SELECT * FROM assignments WHERE classroom_id = ?`,[class_id])
+  return result ;
+}
+
+
+
+
+
+
 export {
   getUser, createSignUp, getAdminDetail, setTempSignup, getOtp,login,
   createClassroom, getClassroom, createStudent,
   createProfessors, getMember, deladmin, editClass,
   editStudent, editProfessor,
-  delStudent, delProfessor
-};
-
+  delStudent, delProfessor,    /// they all are used in admin panel 
+  getMemberClassroom,       //// func use in classrooms
+   createPostWithFile,createAssignment , /// function for posts 
+  
+   getPosts  , getAssignments
+  };
 
 

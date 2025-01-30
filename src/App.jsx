@@ -9,6 +9,9 @@ import Login from './pages/login/Login';
 import Dashboard from './pages/admin/Dashboard';
 import AdminLogin from './pages/admin-login/AdminLogin';
 import Classrom from './pages/classroom/Classroom';
+import Post from './pages/classroom/Post';
+import JoinCall from './pages/VideoCall/JoinCall';
+import Meet from './pages/VideoCall/Meet';
 
 
 const router = createBrowserRouter([{
@@ -43,7 +46,21 @@ const router = createBrowserRouter([{
   {
     path:"/classroom",
     element:<Classrom/>
+  },
+  {
+    path:"/classroom/post/:userId",
+    element: <Post />
+  },
+  {
+    path:"/videocall/join",
+    element:<JoinCall />
+
+  },
+  {
+    path:"/videocall/meet",
+    element:<Meet/>
   }
+
 
   ]);
   

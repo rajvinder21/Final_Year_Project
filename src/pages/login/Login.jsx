@@ -9,7 +9,7 @@ function Login() {
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
-
+  let success ;
   const emailId = email;
   const passId = pass;
   function btnClicked(e) {
@@ -31,7 +31,12 @@ function Login() {
         )
           .then((res) => {
             console.log(res);
+             success = res.headers.success;
+
+            console.log(success);
+
             
+
             // const navigat = res.headers.navigat;
             // console.log(res, navigat)
             // if (navigat == '/dashboard') {
@@ -63,7 +68,9 @@ function Login() {
       finally {
         setIsLoading(false)
         if (!isError) {
-
+          if (success){
+            navigate("/classroom")
+          }
 
         }
       }
@@ -76,7 +83,7 @@ function Login() {
     }
 
     mysend()
-  
+
 
   }
 
@@ -104,11 +111,11 @@ function Login() {
         <p>Password</p>
         <input type="password" value={pass} onChange={(e) => { setPass(e.target.value) }} required /><br />
         <button type="submit" onClick={btnClicked}>LOGIN</button>
-        
+
 
       </form>
       <Link to={"/admin-login"}>Admin Login</Link>
-      
+
     </div>
   )
 }

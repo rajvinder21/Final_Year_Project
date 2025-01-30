@@ -11,25 +11,31 @@ const adminAuth = (req,res,next)=>{
     const token = req.cookies.jwt ;
 
     if (token) {
-        jwt.verify(token, 'attackontitan',(err,decodedToken)=>{
-            if (err) {
-                console.log("restrcited routes");
-                console.log(err);
 
-                 
-            } else {
-                // console.log(decodedToken);
-                // console.log(decodedToken);
-                
-                next();
-                
-            }
-
-        })
+        try {
+            jwt.verify(token, 'attackontitan', (err, decodedToken) => {
+                if (err) {
+                    console.log("Restricted routes");
+                    console.log(err);
+                    const data = {
+                        confirm : true } 
+                        res.json(data)
+                    // Handle token-specific error (e.g., invalid or expired token)
+                } else {
+                    // Token is valid, proceed to the next middleware
+                    // console.log(decodedToken);
+                    next();
+                }
+            });
+        } catch (error) {
+            console.log("An unexpected error occurred during token verification:", error);
+            
+            // Handle unexpected errors (e.g., syntax errors, runtime issues)
+        }
     } else {
         console.log("no thanks");
         const data = {
-         confirm : true}
+         confirm : true } 
          res.json(data)
         
     }

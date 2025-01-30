@@ -1,0 +1,59 @@
+.horizontal-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .horizontal-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .card-icon {
+    font-size: 3rem; /* Adjust size as needed */
+    color: #3498db; /* Blue color */
+    transition: transform 0.3s ease;
+  }
+  
+  .card-icon:hover {
+    transform: scale(1.1);
+  }
+  
+  .card-title-styled {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  .card-description {
+    color: #7f8c8d;
+    font-size: 1rem;
+  }
+  
+  .time-remaining-button {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+  
+  .time-remaining-button:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+  }
+  
+  .download-text {
+    font-size: 1rem;
+    color: #2980b9;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
+  .download-text:hover {
+    color: #3498db;
+  }
+  
