@@ -29,7 +29,7 @@ export const getToken = async () => {
 //     const url = `${API_BASE_URL}/v2/rooms`;
 //     const options = {
 //       method: "POST",
-//       headers: { Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI0ODUzMzgwZC1hOTA2LTQ4MzYtOGIzMS04NzkxNmEwYzcyNTYiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTczNzkwNTM3OSwiZXhwIjoxODk1NjkzMzc5fQ.T475dTn6XaeBKksPMQhUYQNYVmdoHcnUI9uWWxr4WCk', "Content-Type": "application/json" },
+//       headers: { Authorization: '', "Content-Type": "application/json" },
 //     };
   
 //     const response = await fetch(url, options)
@@ -47,7 +47,7 @@ export const getToken = async () => {
 
 
 
-export const authToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiI0ODUzMzgwZC1hOTA2LTQ4MzYtOGIzMS04NzkxNmEwYzcyNTYiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTczNzkwNTM3OSwiZXhwIjoxODk1NjkzMzc5fQ.T475dTn6XaeBKksPMQhUYQNYVmdoHcnUI9uWWxr4WCk";
+export const authToken = "";
 // API call to create a meeting
 export const createMeeting = async ({ token }) => {
   const res = await fetch(`https://api.videosdk.live/v2/rooms`, {
