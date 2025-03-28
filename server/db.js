@@ -2,6 +2,7 @@
 
 import { v4 as uuidv4 } from "uuid";
 import mysql from 'mysql2';
+import { populate } from "dotenv";
 // import mysql from 'mysql';
 
 
@@ -75,53 +76,53 @@ const notes = await getUser()
 async function createStudent(fname, lname, email, myclass, gender, class_id, password, student_id) {
   // checking if data is already there
   const [res] = await pool.query(`SELECT * FROM students WHERE email = ?`, [email])
-console.log(res);
+  console.log(res);
 
-  if (res.length == 0){
-  const [result] = await pool.query(`INSERT INTO students(student_id,fname,lname,email,password,myclass,gender) VALUES(?,?,?,?,?,?,?)`, [student_id, fname, lname, email, password, myclass, gender])
-  const [results] = await pool.query(`INSERT INTO member_participants(member_id, classroom_id) VALUES(?,?)`, [student_id,class_id])
-return results
-}
+  if (res.length == 0) {
+    const [result] = await pool.query(`INSERT INTO students(student_id,fname,lname,email,password,myclass,gender) VALUES(?,?,?,?,?,?,?)`, [student_id, fname, lname, email, password, myclass, gender])
+    const [results] = await pool.query(`INSERT INTO member_participants(member_id, classroom_id) VALUES(?,?)`, [student_id, class_id])
+    return results
+  }
 
-  const [results] = await pool.query(`INSERT INTO member_participants(member_id, classroom_id) VALUES(?,?)`, [res[0].student_id,class_id])
-return results
+  const [results] = await pool.query(`INSERT INTO member_participants(member_id, classroom_id) VALUES(?,?)`, [res[0].student_id, class_id])
+  return results
 }
 
 
 async function createProfessors(fname, lname, email, myclass, gender, class_id, password, professor_id) {
-  
+
   const [res] = await pool.query(`SELECT * FROM professors WHERE email = ?`, [email])
- console.log("here we are checking something",res);
- 
-  if (res.length == 0){
-  const [result] = await pool.query(`INSERT INTO professors(professsor_id,fname,lname,email,password,myclass,gender) VALUES(?,?,?,?,?,?,?)`, [professor_id, fname, lname, email, password, myclass,  gender])
-  const [results] = await pool.query(`INSERT INTO member_participants(member_id, classroom_id) VALUES(?,?)`, [professor_id,class_id])
-  return results
+  console.log("here we are checking something", res);
+
+  if (res.length == 0) {
+    const [result] = await pool.query(`INSERT INTO professors(professsor_id,fname,lname,email,password,myclass,gender) VALUES(?,?,?,?,?,?,?)`, [professor_id, fname, lname, email, password, myclass, gender])
+    const [results] = await pool.query(`INSERT INTO member_participants(member_id, classroom_id) VALUES(?,?)`, [professor_id, class_id])
+    return results
   }
 
-  const [results] = await pool.query(`INSERT INTO member_participants(member_id, classroom_id) VALUES(?,?)`, [res[0].professsor_id,class_id])
- return results
+  const [results] = await pool.query(`INSERT INTO member_participants(member_id, classroom_id) VALUES(?,?)`, [res[0].professsor_id, class_id])
+  return results
 
 }
 
 
 async function getMember(class_id) {
 
-const [result] = await pool.query(`SELECT s.* FROM member_participants mp
+  const [result] = await pool.query(`SELECT s.* FROM member_participants mp
 JOIN students s ON s.student_id = mp.member_id
 WHERE mp.classroom_id = ?
 UNION
 SELECT p.* FROM member_participants mp
 JOIN professors p ON p.professsor_id = mp.member_id
-WHERE mp.classroom_id = ?;`,[class_id,class_id] )
+WHERE mp.classroom_id = ?;`, [class_id, class_id])
 
-return result
+  return result
 
 }
 
 async function editClass(class_id, cname, descript) {
-  const [result] = await pool.query(`UPDATE classroom_admin SET cname = ?, description = ? WHERE classroom_id = ?`,[cname, descript, class_id] );
-  return result ;
+  const [result] = await pool.query(`UPDATE classroom_admin SET cname = ?, description = ? WHERE classroom_id = ?`, [cname, descript, class_id]);
+  return result;
 }
 
 
@@ -187,56 +188,114 @@ async function delProfessor(professor_id) {
 
 //////////////NormaL user code 
 
-async function login(email,password) {
+async function login(email, password) {
   const [result] = await pool.query(`SELECT * FROM (SELECT * FROM students UNION ALL SELECT * FROM professors) AS combined_users
-WHERE email = ? AND password = ? ;`,[email,password])  
+WHERE email = ? AND password = ? ;`, [email, password])
 
-return result ;
+  return result;
 }
 
 async function getMemberClassroom(member_id) {
   const result = await pool.query(`SELECT * FROM classroom_admin
-WHERE classroom_id IN (SELECT classroom_id FROM member_participants WHERE member_id = ? );`,[member_id] )
-return result
-}
-
-async function createPostWithFile(post_id,class_id,title,descript,link,filename, author, date) {
-
-  const result = await pool.query(`INSERT INTO posts(post_id,classroom_id,title,description,link,file_name,author,date) VALUES(?,?,?,?,?,?,?,?)`, [post_id,class_id,title,descript,link,filename, author, date])
+WHERE classroom_id IN (SELECT classroom_id FROM member_participants WHERE member_id = ? );`, [member_id])
   return result
 }
 
-async function createAssignment(assign_id,class_id,title,descript,link,filename, author, date,submission) {
+async function getMemberName(member_id) {
+  const firstFour = member_id.slice(0, 4);
+  if (firstFour == "prof") {
+    const [result] = await pool.query('SELECT * from professors where professsor_id = ?', [member_id])
+    return result
+  }
 
-  const result = await pool.query(`INSERT INTO assignments(assign_id,classroom_id,title,description,link,file_name,author,date,submission) VALUES(?,?,?,?,?,?,?,?,?)`, [assign_id,class_id,title,descript,link,filename, author, date,submission])
+  const [result] = await pool.query('SELECT * from students where student_id = ?', [member_id])
+  return result
+
+}
+
+async function createPostWithFile(post_id, class_id, title, descript, link, filename, author, date) {
+
+  const result = await pool.query(`INSERT INTO posts(post_id,classroom_id,title,description,link,file_name,author,date) VALUES(?,?,?,?,?,?,?,?)`, [post_id, class_id, title, descript, link, filename, author, date])
+  return result
+}
+
+async function createAssignment(assign_id, class_id, title, descript, link, filename, author, date, submission) {
+
+  const result = await pool.query(`INSERT INTO assignments(assign_id,classroom_id,title,description,link,file_name,author,date,submission) VALUES(?,?,?,?,?,?,?,?,?)`, [assign_id, class_id, title, descript, link, filename, author, date, submission])
   return result
 }
 
 async function getPosts(class_id) {
-  const result = await pool.query(`SELECT * FROM posts WHERE classroom_id = ?`,[class_id])
-  return result ;
+  const result = await pool.query(`SELECT * FROM posts WHERE classroom_id = ?`, [class_id])
+  return result;
 }
 
 async function getAssignments(class_id) {
-  const result = await pool.query(`SELECT * FROM assignments WHERE classroom_id = ?`,[class_id])
-  return result ;
+  const result = await pool.query(`SELECT * FROM assignments WHERE classroom_id = ?`, [class_id])
+  return result;
 }
 
+async function checkMeet(class_id, date) {
+  const result = await pool.query(`SELECT * FROM meets where date = date`);
+  return result;
+}
 
+async function createMeet(class_id, meeting_id, date) {
+  const [check, field] = await pool.query('SELECT * FROM meets WHERE date = ? and classroom_id = ?', [date,class_id])
+  console.log(check.length);
 
+  if (check.length == 0) {
+    const result = await pool.query(`INSERT INTO meets(classroom_id,meeting_id,date) VALUES(?,?,?)`, [class_id, meeting_id, date])
+    return meeting_id;
+  }
+  else {
+    return check[0].meeting_id
+  }
+
+}
+
+async function editPost(post_id, title, descript, link, file_name, professor_id, gettime) {
+  console.log(professor_id, post_id, gettime);
+
+  const [result] = await pool.query(`UPDATE posts SET title = ?, description = ?, link = ? , file_name = ?, date = ?   WHERE post_id = ? and author=?;`, [title, descript, link, file_name, gettime, post_id, professor_id])
+  return result;
+}
+
+async function delPost(post_id) {
+
+  const [result] = await pool.query(`DELETE FROM posts where post_id = ?`, [post_id])
+  return result;
+}
+
+async function delAssign(assign_id) {
+
+  const [result] = await pool.query(`DELETE FROM assignments where assignment_id = ?`, [assign_id])
+  return result;
+}
+
+async function createLecture(lecture_id, lecture_name, professor_id, classroom_id, start_time, end_time, date) { 
+  const [result] = await pool.query(`INSERT INTO lectures(lecture_id, classroom_id, name, professor_id, start_time, end_time, date ) VALUES(?,?,?,?,?,?,?)`, [lecture_id, classroom_id, lecture_name, professor_id, start_time, end_time, date])
+  return result;
+} 
+
+async function takeAttend() {
+
+}
 
 
 
 export {
-  getUser, createSignUp, getAdminDetail, setTempSignup, getOtp,login,
+  getUser, createSignUp, getAdminDetail, setTempSignup, getOtp, login,
   createClassroom, getClassroom, createStudent,
   createProfessors, getMember, deladmin, editClass,
   editStudent, editProfessor,
   delStudent, delProfessor,    /// they all are used in admin panel 
-  getMemberClassroom,       //// func use in classrooms
-   createPostWithFile,createAssignment , /// function for posts 
-  
-   getPosts  , getAssignments
-  };
+  getMemberClassroom, getMemberName,      //// func use in classrooms
+  createPostWithFile, createAssignment, /// function for posts 
+
+  getPosts, getAssignments, delAssign,
+  createMeet, checkMeet, editPost, delPost,
+  createLecture
+};
 
 

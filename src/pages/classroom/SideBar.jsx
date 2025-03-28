@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios, { Axios } from "axios";
 
 
-export default function SideBar({classSelect, SetMember}) {
+export default function SideBar({classSelect, SetMember,SetMemberData}) {
 
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [classrooms, setclassrooms] = useState([]);
   const [selectClass, setSelectClass] = useState('')
+  
 
 
   useEffect(() => {
@@ -24,6 +25,8 @@ export default function SideBar({classSelect, SetMember}) {
           classSelect(response.data.classrooms[0].classroom_id)
           setSelectClass(response.data.classrooms[0].classroom_id)
           SetMember(response.data.member_id)
+          SetMemberData(response.data.memberData[0])
+
 
 
 
@@ -79,6 +82,14 @@ export default function SideBar({classSelect, SetMember}) {
         <li><a href="#" className="text-decoration-none">+ IT</a></li>
         <li><a href="#" className="text-decoration-none">+ Maths</a></li> */}
       </ul>
+      
+<style>
+{`
+
+
+`}
+</style>
+
     </div>
   );
 }

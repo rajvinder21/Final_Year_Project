@@ -19,6 +19,8 @@ const adminAuth = (req,res,next)=>{
                     console.log(err);
                     const data = {
                         confirm : true } 
+
+                        console.log("issue in token heerere ")
                         res.json(data)
                     // Handle token-specific error (e.g., invalid or expired token)
                 } else {
@@ -36,6 +38,8 @@ const adminAuth = (req,res,next)=>{
         console.log("no thanks");
         const data = {
          confirm : true } 
+         console.log("not loggeddd");
+         
          res.json(data)
         
     }

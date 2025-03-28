@@ -2,16 +2,22 @@ import React, { useEffect, useState } from 'react';
 import axios, { Axios } from "axios";
 import { useNavigate } from 'react-router-dom';
 
-function Cards({data}) {
+function Cards({data,postClick}) {
     const [isError, setIsError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [list,setList] = useState([])
+    const [listt,setList] = useState([])
       const navigate = useNavigate();
    
   
   useEffect(() => {
     setIsLoading(true);
     console.log("called useeffect-1");
+
+  let class_id = btoa(data)
+  console.log("dl classs check", class_id);
+  
+   localStorage.setItem("class",class_id)
+    
     async function getdata() {
 
 
@@ -30,7 +36,7 @@ function Cards({data}) {
 
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err ,"this we got");
           setIsError(true)
 
         })
@@ -48,7 +54,9 @@ function Cards({data}) {
   }, [data])
 
   function clickTitle(path) {
-    navigate('/classroom/post/' +path )
+    // navigate('/classroom/post/' +path )
+    postClick(path)
+
     console.log(path);
     
   }
@@ -72,10 +80,10 @@ function Cards({data}) {
     <h2>Posts</h2>
    
    <div className="row mt-3">
-  {list.length === 0 ? (
+  {listt.length === 0 ? (
     <p className="text-muted fs-5">No classrooms created yet</p>
   ) : (
-    list.map((row, id) => (
+    listt.map((row, id) => (
       <div key={id} className="col-12 mb-4">
         <div className="card shadow-sm h-100 border-hover">
           <div className="row g-0">
@@ -97,7 +105,7 @@ function Cards({data}) {
                 </div>
 
                 {/* Title */}
-                <h5 className="card-title mb-3 text-truncate hover-underline" onClick={()=>{clickTitle(row.post_id)}}>
+                <h5 className="card-title mb-3 text-truncate hover-underline" onClick={()=>{clickTitle(row)}}>
                   {row.title}
                 </h5>
 
@@ -161,34 +169,7 @@ function Cards({data}) {
  
   <div className="row mt-3">
   {/* Card 1 */}
-  {(list.length == 0) ? <p> not created any classroom</p> : list.map((row, id) => <div key={id} className="col-md-6 col-lg-6 mb-3">
-    <div className="card p-3 shadow-sm">
-      {/* Creator Info */}
-      <div className="text-muted small mb-2">Created by: <strong>{row.author}</strong></div>
 
-      {/* Card Title */}
-      <h5 className="card-title">{row.title}</h5>
-
-      {/* Card Description */}
-      <p className="card-text text-muted">
-        {row.description}
-      </p>
-
-      {/* File Section */}
-      <div className="d-flex align-items-center mb-2">
-        <i className="bi bi-file-earmark-text me-2"></i>
-        <a href={row.link} className="text-primary text-decoration-none">
-         {row.file_name}
-        </a>
-      </div>
-
-      {/* Date and Time */}
-      <div className="text-muted small text-end">Posted on: {row.date}</div>
-    </div>
-  </div>
-
-
-  )}
 
 
   

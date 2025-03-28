@@ -13,7 +13,9 @@ import ChatroomWindow from './window/ChatroomWindow';
 import WorkWindow from './window/WorkWindow';
 import MemberWindow from './window/MemberWindow';
 import PostModel from './window/PostModel';
+
 import './classroom.css';
+import Post from './Post';
 
 
 
@@ -31,9 +33,13 @@ function Classrom() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentclass, setCurrentClass] = useState('');
   const [member_id, setMember_id] = useState('')
+  const [memberData, setMemberData] = useState([])
 
   //show modal 
   const [showModal, setShowModal] = useState(false);
+  const [postV, setPostV] = useState(false)
+  const [postData, setPostData] = useState([])
+  const [postEdit, setPostEdit] = useState()
 
   const navigate = useNavigate();
 
@@ -88,6 +94,64 @@ function Classrom() {
     console.log("we st set",id);
     
   }
+  function SetMemberData(data) {
+    setMemberData(data)
+  }
+
+
+/// code for post here:- 
+
+
+function postClick(data) {
+  setPostV(true)
+
+  console.log("we go t you post here ", data);
+ setPostData(data)
+  
+}
+function closePost() {
+  setPostV(false)
+}
+
+function onPostEdit(data) {
+  setPostEdit(data)
+  setShowModal(true)
+  console.log("On Post edit clickeddd", data);
+  
+
+}
+
+function onPostDel(data) {
+  console.log(data.post_id);
+
+  async function myget() {
+      setIsLoading(true)
+      axios.get('/classroom/delpost', {
+        headers:{
+          "post_id":data.post_id
+        }
+      })
+
+        .then((response) => {
+          console.log( response)
+
+
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsError(true)
+
+
+        })
+        .finally(() => {
+          setIsLoading(false)
+
+        })
+    }
+    myget()
+    setPostV(false)
+}
+
   
 /// code for floating Modal 
 
@@ -134,16 +198,18 @@ function setCurrentSection(data) {
 
 const Modeldata = {
   member:member_id,
-  class:currentclass
+  class_id:currentclass,
+  memberName: memberData.fname + " " + memberData.lname
 }
-  
+
+
 
   return (
     <div className="container-fluid">
       <NavbarC toggleSidebar={toggleSidebar} />
       <div className="row">
       <div className={`col-md-3 col-lg-2 h-100 sidebar ${sidebarOpen ? 'open' : ''}`}>
-          <SideBar classSelect={classSelect} SetMember={SetMember} />
+          <SideBar classSelect={classSelect} SetMember={SetMember} SetMemberData={SetMemberData} />
         </div>
 
         <div className="col-md-9 col-lg-10 main-content">
@@ -153,14 +219,15 @@ const Modeldata = {
 
          
  
-          <SectionTitle title="Science" onChatRoom={onChatRoom} />
+          <SectionTitle  data={Modeldata} onChatRoom={onChatRoom} />
           <div>
           {showChatroom ? <ChatroomWindow onChatRoom={onChatRoom} /> : <p></p> }
-          {curentSection === "classroom" && <Cards data={currentclass} />}
+          {postV ? <Post data={postData} closePost={closePost} onPostDel={onPostDel} onPostEdit={onPostEdit} /> : (curentSection === "classroom" && <Cards data={currentclass} postClick={postClick} />)}
+        
             {curentSection === "work" && <WorkWindow data={Modeldata}/>} {/* For "Work" */}
             {curentSection === "member" && <MemberWindow data={currentclass} />} {/* For "Member" */}
            
-            {showModal && <PostModel data={Modeldata} handleCloseModal={handleCloseModal} />}
+            {showModal && <PostModel data={Modeldata} postEdit={postV ? (postEdit) : ({})} handleCloseModal={handleCloseModal} />}
 
           <button className="btn btn-primary rounded-circle position-fixed" style={{ bottom: '2rem', right: '2rem' }}
            onClick={handleOpenModal}

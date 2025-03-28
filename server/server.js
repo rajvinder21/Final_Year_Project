@@ -51,7 +51,7 @@ app.use("/dashboard", adminAuth, dashboard)
 
 app.use("/classroom",adminAuth,classroom)
 
-app.use('/videocall',video)
+app.use('/videocall',adminAuth,video)
 
 
 

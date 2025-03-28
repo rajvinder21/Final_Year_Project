@@ -5,7 +5,9 @@ import moment from "moment/moment.js";
 // import { CloudinaryStorage } from "multer-storage-cloudinary";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadFile,downloadFile } from "../../service/cloudserver.js";
-import { createPostWithFile,createAssignment,getPosts,getAssignments } from "../../db.js";
+import { createPostWithFile,createAssignment,
+  getPosts,getAssignments, editPost,
+   delPost, delAssign,getMemberName } from "../../db.js";
 import { v4 as uuidv4 } from "uuid";
 
  
@@ -24,13 +26,14 @@ const upload = multer({ dest: "uploads/" });
 
 router.get("/", async (req, res) => {
   console.log("successfully get in classroom");
-
+    
 
   const data = {
     confirm: false
   }
   res.send(data)
 })
+
 
 
 router.get("/getclassroom", async (req, res) => {
@@ -49,10 +52,13 @@ router.get("/getclassroom", async (req, res) => {
   })
 
   const classrooms = await getMemberClassroom(member_id)
-  // console.log(classrooms[0]);
+  const memberData = await getMemberName(member_id)
+  console.log(memberData);
+  
   const data = {
     classrooms: classrooms[0],
-    member_id: member_id
+    member_id: member_id,
+    memberData:memberData
   }
   res.send(data)
 
@@ -73,14 +79,123 @@ router.get("/getmember", async (req, res) => {
 
 })
 
+router.post('/postedit', upload.single("file"), async (req,res)=>{
+  const post_id = req.body.post_id ;
+  const class_id = req.body.classroom_id;
+  const title = req.body.title;
+  const descript = req.body.descript;
+  const professor_id = req.body.professor_id;
+  // const file = req.file;
+  const file_name = req.body.freeName;
+  const gettime =  moment().format('YYYY/MM/DD HH:mm:ss')
+  
+  console.log("successfull",post_id);
+
+  if (req.file) {
+
+   
+    console.log(file_name);
+    
+
+    try {
+      const fileUrl = req.file.path; 
+      const fileId = req.file.filename; 
+      console.log(fileId,fileUrl);
+
+      const fileresult = await uploadFile(fileUrl,class_id)
+      console.log(fileresult,fileresult.secure_url);   
+      const link = fileresult.secure_url
+      // adding data to database
+      const data = await editPost(post_id,title,descript,link,file_name,professor_id,gettime)
+      console.log("database log with file:- ", data)
+    } catch (error) {
+      console.log("we got err",error);
+      
+    }
+
+
+  
+   
+    res.send()
+    res.status(200)
+
+  }
+
+  else {
+
+    const data = await editPost(post_id,title,descript, '#','No File',professor_id,gettime)
+    console.log("database log without file:- ", data)
+ 
+
+   
+    res.send()
+    res.status(200)
+  }
+
+  
+  
+})
+
+
+
+router.get('/delpost', async (req,res)=>{
+  const post_id = req.headers.post_id ;
+
+  const result = await delPost(post_id);
+  console.log(result);
+
+  
+    
+  
+
+ 
+
+   res.status(200)
+   res.send(result)
+   
+  
+
+
+})
+
+router.get('/delassignment', async (req,res)=>{
+  const assign_id = req.headers.assign_id ;
+
+  const result = await delAssign(assign_id);
+  console.log(result);
+
+  
+    
+  
+
+ 
+
+   res.status(200)
+   res.send(result)
+   
+  
+
+
+})
+
+
+
+
 router.get('/getpost', async (req,res)=>{
   const classroom_id = req.headers.classroom_id ;
 
-  const data = await getPosts(classroom_id);
-  console.log(data);
+  const result = await getPosts(classroom_id);
+  // console.log(result);
 
-  res.status(200)
-  res.send(data)
+  
+    
+  
+
+ 
+
+   res.status(200)
+   res.send(result)
+   
   
 
 
@@ -90,14 +205,19 @@ router.get('/getassignment', async (req,res)=>{
   const classroom_id = req.headers.classroom_id ;
 
   const data = await getAssignments(classroom_id);
-  console.log(data);
+  // console.log(data);
   
 
-  res.status(200)
+ 
   res.send(data)
+  res.status(200)
   
 
 })
+
+
+
+
 
 
 
@@ -138,9 +258,9 @@ router.post("/createPost", upload.single("file"), async (req, res) => {
 
 
   
-    res.status(200)
+   
     res.send()
-
+    res.status(200)
 
   }
 
@@ -150,8 +270,9 @@ router.post("/createPost", upload.single("file"), async (req, res) => {
     console.log("database log without file:- ", data)
  
 
-    res.status(200)
+   
     res.send()
+    res.status(200)
   }
 
   
@@ -218,6 +339,11 @@ router.post("/createAssignment", upload.single("file"), async (req, res) => {
 
 
 })
+
+
+
+
+
 
 
 export default router;

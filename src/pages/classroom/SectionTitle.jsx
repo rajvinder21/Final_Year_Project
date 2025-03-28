@@ -1,9 +1,25 @@
 import React from 'react'
+import { useNavigate } from "react-router-dom";
 
-export default function SectionTitle({ title,onChatRoom }) {
+export default function SectionTitle({ data,onChatRoom }) {
+const navigate = useNavigate();
 
 function onChatClick() {
   onChatRoom(true)
+}
+
+function handleJoin() {
+  console.log("delete this ", data.class);
+  
+  const dataa = {
+    class_id:data.class,
+    member_id:data.member_id,
+    memberName:data.memberName
+  }
+
+  console.log("i go this ",data.member);
+  
+  navigate('/videocall/meet',{state:data})
 }
 
   return (
@@ -12,7 +28,7 @@ function onChatClick() {
 <div 
   className="d-flex justify-content-between align-items-center mb-4 p-4 rounded-3 shadow-sm position-relative"
   style={{
-    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('your-image-url.jpg')`,
+    backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95))')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center'
   }}
@@ -21,14 +37,14 @@ function onChatClick() {
     {/* Title Section */}
     <div className="section-title mb-3">
       <h3 className="h4 fw-bold text-dark mb-2">
-        {title}
+        Science
         <div className="title-underline"></div>
       </h3>
     </div>
 
     {/* Buttons Section - Updated for visibility */}
     <div className="d-flex gap-3">
-      <button className="btn btn-primary px-4 py-2 hover-lift">
+      <button onClick={handleJoin} className="btn btn-primary px-4 py-2 hover-lift">
         <i className="bi bi-camera-video-fill me-2"></i>
         <span>Join Call</span>
       </button>

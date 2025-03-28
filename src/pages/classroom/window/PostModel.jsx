@@ -1,16 +1,74 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import axios, { Axios } from "axios";
 
 
-export default function PostModel({data, handleCloseModal }) {
+export default function PostModel({data,postEdit, handleCloseModal }) {
     const [activeTab, setActiveTab] = useState("post"); // "post" or "assignment"
     const [isError, setIsError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [title, setTitle ] = useState('');
-    const [descript, setDescript] = useState('');
+    const [title, setTitle ] = useState(postEdit.title ||"");
+    const [descript, setDescript] = useState(postEdit.description ||"");
     const [file, setFile] = useState(null);
     const [date,setDate] = useState('');
     let freeName ; 
+
+
+    const onEdit = (e)=>{
+      console.log("no issue here and there");
+      
+      const formData = new FormData();
+      formData.append("post_id",postEdit.post_id)
+      formData.append("classroom_id", postEdit.classroom_id);
+      formData.append("title", title);
+      formData.append("descript", descript);
+      formData.append("professor_id", postEdit.author);
+      formData.append("file", file);
+      formData.append('freeName',freeName);
+   
+    
+      e.preventDefault();
+      async function mysend() {
+        setIsLoading(true)
+        try {
+          await axios.post("classroom/postedit", formData,
+             {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            } )
+            .then((res) => {
+              console.log(res);
+  
+            })
+            .catch((error) => {
+              setIsError(true)
+              console.log("we got errir", error)
+  
+              console.log("we got errdsdfasir", error)
+  
+            })
+  
+        } catch (error) {
+  
+          setIsError(true)
+  
+        }
+  
+        finally {
+          setIsLoading(false)
+         
+        }
+
+  
+      }
+  
+      mysend()
+  
+  
+    
+
+      handleCloseModal()
+    }
 
 
 
@@ -154,12 +212,14 @@ export default function PostModel({data, handleCloseModal }) {
               >
                 Post
               </button>
-              <button
+
+              {postEdit.title == undefined ? <button
                 className={`btn ${activeTab === "assignment" ? "btn-primary" : "btn-outline-primary"}`}
                 onClick={() => setActiveTab("assignment")}
               >
                 Assignment
-              </button>
+              </button> :<></> }
+              
             </div>
   
             {/* Form Fields */}
@@ -263,7 +323,7 @@ export default function PostModel({data, handleCloseModal }) {
 
                 {activeTab === "post" && (
                   <>
-                  <button type="submit" onClick={onPost} className="btn btn-primary">
+                  <button type="submit" onClick={ postEdit.title == undefined ? onPost: onEdit} className="btn btn-primary">
                   Post
                 </button>
                   </>

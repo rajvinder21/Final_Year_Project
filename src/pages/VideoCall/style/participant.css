@@ -1,0 +1,250 @@
+/* Reset margins and paddings */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 
+
+/* Full-screen grid container */
+.box-container-participant {
+  display: grid;
+  width: 100%;
+  overflow-y: auto;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 6px; 
+  padding: 6px;
+  
+ 
+}
+
+
+
+/* Media query for larger screens (laptop/PC) */
+@media (min-width: 992px) {
+  .box-container {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns on large screens */
+  }
+
+  .video-area {
+    grid-template-columns: repeat(4, 1fr); /* 4 columns on large screens */
+  }
+}
+
+/* Each box: enforce a square shape using aspect-ratio */
+.box-participant {
+  background-color: lightblue;
+  border: 2px solid darkblue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  /* Enforce square shape */
+  aspect-ratio: 1 / 1;
+}
+
+/* If there's only one box, span full width (70% of container) and center it */
+.box-container-participant > .box-participant:only-child {
+  grid-column: 1 / -1;
+  width: 70%;
+  justify-self: center;
+  text-align: center;
+ 
+  height: 60%;
+ 
+}
+*/
+
+/* participant viewssss  */
+.video-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #000; /* fallback background */
+}
+
+/* Ensure ReactPlayer fills the container */
+/* .video-card > div,
+.video-card > iframe,
+.video-card > video {
+  width: 100% !important;
+  height: 100% !important;
+} */
+
+/* Participant Name Overlay (Top) */
+.participant-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5); /* semi-transparent overlay */
+  color: #fff;
+  z-index: 2;
+}
+
+/* Controls Overlay (Bottom) */
+.video-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.5); /* semi-transparent overlay */
+  z-index: 1;
+}
+
+/* Spacing between control buttons */
+.video-controls button {
+  margin: 0 5px;
+}
+
+
+.control-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgb(33 34 41);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  z-index: 2; 
+}
+
+.control-bar button {
+  margin-top: auto;
+  background: rgb(33 34 41);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.control-bar button:hover {
+  color: #e0dbdb;
+}
+
+/* new code hereeeee */
+.video-area {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  height: 90vh;
+  gap: 1rem;
+  padding: 1rem;
+  overflow: auto;
+  /* flex: 3;
+  background: #e5e5e5;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  overflow-y: auto; */
+}
+.video-box {
+  background: #000;
+  width: calc(50% - 10px);
+  height: calc(50% - 10px);
+  position: relative;
+}
+.video-box video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.video-box .participant {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  padding: 2px 5px;
+  font-size: 12px;
+  border-radius: 3px;
+}
+
+
+.camera-box {
+  background-color: black;
+  width: auto;
+  /* max-width: 900px;  */
+  height: auto; /* Fixed Height */
+  position: relative;
+  border-radius: 10px;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+}
+
+
+
+.camera-off {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.video-area > .camera-box:only-child {
+  background-color: black;
+  width: 90%;
+  max-width: 900px; /* Made Bigger */
+  height: 500px; /* Fixed Height */
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  
+
+}
+
+.top-bar {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  background: #303134;
+}
+
+
+@media (min-width: 602px) {   
+
+video-area > .camera-box:only-child {
+  background-color: black;
+  width: auto;
+  
+  height: auto; /* Fixed Height */
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+}
+
+.mycolor{
+  background: rgb(55, 57, 69);
+}
