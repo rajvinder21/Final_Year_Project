@@ -224,7 +224,7 @@ const Modeldata = {
           {showChatroom ? <ChatroomWindow onChatRoom={onChatRoom} /> : <p></p> }
           {postV ? <Post data={postData} closePost={closePost} onPostDel={onPostDel} onPostEdit={onPostEdit} /> : (curentSection === "classroom" && <Cards data={currentclass} postClick={postClick} />)}
         
-            {curentSection === "work" && <WorkWindow data={Modeldata}/>} {/* For "Work" */}
+            {curentSection === "work" && <WorkWindow data={currentclass}/>} {/* For "Work" */}
             {curentSection === "member" && <MemberWindow data={currentclass} />} {/* For "Member" */}
            
             {showModal && <PostModel data={Modeldata} postEdit={postV ? (postEdit) : ({})} handleCloseModal={handleCloseModal} />}

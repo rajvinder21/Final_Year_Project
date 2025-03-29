@@ -20,7 +20,7 @@ useEffect(() => {
 
     axios.get('/classroom/getassignment', {
       headers:{
-        classroom_id: data.class
+        classroom_id: data
       }
     })
       .then(function (response) {
@@ -48,7 +48,7 @@ useEffect(() => {
 
 
 
-}, [data.class])
+}, [data])
 
 
   // code of if get error and loading 

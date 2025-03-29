@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from 'dotenv';
 import jwt from "jsonwebtoken";
-import { createMeet, checkMeet,createLecture,getMemberName } from "../../db.js";
+import { createMeet, checkMeet,createLecture,getMemberName, getMember,takeAttend } from "../../db.js";
 import { v4 as uuidv4 } from "uuid";
 import moment from "moment/moment.js";
 import { createSession } from "react-router-dom";
@@ -86,24 +86,54 @@ router.post("/setlecture", async (req, res) => {
     const date = moment().format('YYYY/MM/DD HH:mm:ss')
     
   
-    const result = await createLecture(lecture_id, lecture_name,professor_id,classroom_id, start_time,end_time,date);
-    console.log(result);
+    // const result = await createLecture(lecture_id, lecture_name,professor_id,classroom_id, start_time,end_time,date);
+    // console.log(result);
+
+    const allmember = await getMember(classroom_id)
   
   console.log(classroom_id,start_time,professor_id);
   
   
     res.status(200)
-    res.send(lecture_id)
+  let data = {
+    lecture_id:lecture_id,
+    allmember:allmember
+  }
+    res.send(data)
   
   
   })
 
 
 router.post("/takeattendence", async (req, res) => { 
-    const attend = req.body.JSON ;
+    const classroom_id = req.body.classroom_id ;
+    const lecture_id = req.body.lecture_id ;
+    const presentMember = req.body.presentMember;
+    const absentMember = req.body.absentMember ;
+    const dd = req.body ;
+
+     presentMember.map(async (mem) => {
+      let res = await takeAttend(lecture_id,mem.professsor_id || mem.student_id,"present")
+      console.log(res);
+     })
+
+
+  absentMember.map(async (mem) => {
+      let res = await takeAttend(lecture_id,mem.professsor_id || mem.student_id,"absent")
+      console.log(res);
+      
+     })
+
+console.log(presentMember,absentMember, dd);
+
+    res.status(200)
+    res.send()
 
 
 })
+
+
+
 
 
 

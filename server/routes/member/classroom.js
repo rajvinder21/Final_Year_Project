@@ -205,7 +205,7 @@ router.get('/getassignment', async (req,res)=>{
   const classroom_id = req.headers.classroom_id ;
 
   const data = await getAssignments(classroom_id);
-  // console.log(data);
+  console.log(classroom_id,data);
   
 
  
@@ -340,7 +340,19 @@ router.post("/createAssignment", upload.single("file"), async (req, res) => {
 
 })
 
+// router.get('/getclassattendlist', async (req,res)=>{
+//   const classroom_id = req.headers.classroom_id ;
 
+//   const data = await getAssignments(classroom_id);
+//   // console.log(data);
+  
+
+ 
+//   res.send(data)
+//   res.status(200)
+  
+
+// })
 
 
 

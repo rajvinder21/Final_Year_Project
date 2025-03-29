@@ -278,8 +278,8 @@ async function createLecture(lecture_id, lecture_name, professor_id, classroom_i
   return result;
 } 
 
-async function takeAttend() {
-
+async function takeAttend(lecture_id,member_id,attendance_status) {
+  const [result] = await pool.query(`INSERT INTO attendance(lecture_id,member_id,attendance_status) VALUES(?,?,?)`,[lecture_id,member_id,attendance_status])
 }
 
 
@@ -291,11 +291,11 @@ export {
   editStudent, editProfessor,
   delStudent, delProfessor,    /// they all are used in admin panel 
   getMemberClassroom, getMemberName,      //// func use in classrooms
-  createPostWithFile, createAssignment, /// function for posts 
+  createPostWithFile, createAssignment, /// function for postss 
 
   getPosts, getAssignments, delAssign,
   createMeet, checkMeet, editPost, delPost,
-  createLecture
+  createLecture, takeAttend 
 };
 
 

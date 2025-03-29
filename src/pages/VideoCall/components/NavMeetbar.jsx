@@ -1,24 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios, { Axios } from "axios";
 
-function NavMeetbar({ participants, member_id, class_id,memberName }) {
+function NavMeetbar({ participants, member_id, class_id, memberName }) {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLectureOpen, setIsLectureOpen] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-console.log(class_id);
+  console.log(class_id);
 
 
   // lecture 
 
   const [lectureName, setLectureName] = useState('');
+  const [lecture_id, setLecture_id] = useState('')
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  
+
 
   // attend
-
+  const [allMember, setAllMember] = useState([])
+  const [absentMember, setAbsentMenmber] = useState([])
+  const [presentMember, setPresentMember] = useState([])
   const [isAttendOpen, setIsAttendOpen] = useState(false)
 
 
@@ -36,15 +39,15 @@ console.log(class_id);
   }
 
   function lecturesubmit() {
-    setIsLectureOpen(false)
-console.log(class_id,member_id,lectureName);
+    setIsLectureOpen(true)
+    console.log(class_id, member_id, lectureName);
 
     axios.post('/videocall/setlecture', {
-      classroom_id: class_id ,
-      member_id:member_id ,
-      lectureName:lectureName ,
-      startTime:startTime ,
-      endTime:endTime
+      classroom_id: class_id,
+      member_id: member_id,
+      lectureName: lectureName,
+      startTime: startTime,
+      endTime: endTime
     }, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
@@ -54,6 +57,11 @@ console.log(class_id,member_id,lectureName);
 
       .then((response) => {
         console.log("take attendence ", response);
+        setLecture_id(response.data.lecture_id)
+        console.log(response.data.lecture_id, response.data.allmember);
+
+        setAllMember(response.data.allmember)
+        setPresentMember(response.data.allmember)
 
 
 
@@ -67,46 +75,72 @@ console.log(class_id,member_id,lectureName);
       })
       .finally(() => {
         setIsLoading(false)
+        setIsLectureOpen(false)
         setIsAttendOpen(true)
 
       })
   }
 
+  const markPresent = (student) => {
+    setPresentMember([...presentMember, student]);
+    setAbsentMenmber(absentMember.filter((s) => (s.professsor_id || s.student_id) !== (student.professsor_id || student.student_id)));
+  };
+
+  const markAbsent = (student) => {
+    setAbsentMenmber([...absentMember, student]);
+    setPresentMember(presentMember.filter((s) => (s.professsor_id || s.student_id) !== (student.professsor_id || student.student_id)));
+  };
+
+
+
+
   function handdleAttend(e) {
+    
     setIsLectureOpen(true)
 
-    let particilist = [];
-    participants.forEach((value, key) => {
-      console.log(value.displayName.split('+')[1].trim());
+      
+    // let particilist = [];
+    // participants.forEach((value, key) => {
+    //   console.log(value.displayName.split('+')[1].trim());
 
-      particilist.push(value.displayName.split('+')[1].trim())
-    });
+    //   particilist.push(value.displayName.split('+')[1].trim())
+    // });
 
-    console.log(particilist);
+    // console.log(particilist);
+  }
 
-    // axios.post('/videocall/takeattendence',{ 
-    //   classroom_id: data 
+  function submitAttend(params) {
+    
+    axios.post('/videocall/takeattendence',{ 
+      classroom_id: class_id ,
+      lecture_id:lecture_id,
+      presentMember:presentMember,
+      absentMember:absentMember
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    )
 
-    //   }
-    // )
-
-    //   .then((response) => {
-    //     console.log("take attendence ", response.data);
+      .then((response) => {
+        console.log("take attendence ", response);
 
 
 
 
-    //   }) 
-    //   .catch((err) => {
-    //     console.log(err);
-    //     setIsError(true)
+      }) 
+      .catch((err) => {
+        console.log(err);
+        setIsError(true)
 
 
-    //   })
-    //   .finally(() => {
-    //     setIsLoading(false)
+      })
+      .finally(() => {
+        setIsLoading(false)
+        setIsAttendOpen(false)
+      })
 
-    //   })
   }
 
   const styles = `
@@ -190,6 +224,86 @@ console.log(class_id,member_id,lectureName);
   .lecture-button {
     font-size: 13px;
   }
+}
+
+.attendance-window {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 600px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 10;
+  text-align: center;
+}
+
+.attendance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.close-btn {
+  background: red;
+  color: white;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.attendance-columns {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.column {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  min-height: 200px;
+  overflow-y: auto;
+}
+
+.present {
+  background: #d4edda;
+}
+
+.absent {
+  background: #f8d7da;
+}
+
+.student-list {
+  list-style: none;
+  padding: 0;
+}
+
+.student-list li {
+  background: white;
+  padding: 8px;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  text-align: center;
+}
+
+button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
 }
 
 
@@ -279,6 +393,36 @@ console.log(class_id,member_id,lectureName);
         <button onClick={lecturesubmit} className="lecture-button">Submit</button>
       </div>
       }
+
+      {isAttendOpen && <div className="attendance-window">
+        <div className="attendance-header">
+          <h2>Attendance</h2>
+          <button onClick={() => { setIsAttendOpen(false) }} className="close-btn">&times;</button>
+        </div>
+        <div className="attendance-columns">
+          <div className="column present">
+            <h3>Present Students</h3>
+            <ul>
+              {presentMember.map((s) => (
+                <li key={s.professsor_id || s.student_id}>
+                  {s.fname + " " + s.lname} <button onClick={() => markAbsent(s)}>❌</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="column absent">
+            <h3>Absent Students</h3>
+            <ul>
+              {absentMember.map((s) => (
+                <li key={s.professsor_id || s.student_id}>
+                  {s.fname + " " + s.lname} <button onClick={() => markPresent(s)}>✔️</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+        <button onClick={submitAttend}>Submit</button>
+      </div>}
     </>
   );
 }
