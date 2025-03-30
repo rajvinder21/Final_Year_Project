@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios, { Axios } from "axios";
+import { MeetingProvider, useMeeting } from "@videosdk.live/react-sdk";
 
-function NavMeetbar({ participants, member_id, class_id, memberName }) {
 
+function NavMeetbar({ participants, member_id, class_id, memberName, meetingId }) {
+  const meeting = useMeeting();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isLectureOpen, setIsLectureOpen] = useState(false);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [takeName, setTakeName] = useState(false)
   console.log(class_id);
 
 
@@ -20,9 +23,11 @@ function NavMeetbar({ participants, member_id, class_id, memberName }) {
 
   // attend
   const [allMember, setAllMember] = useState([])
+  let memberr;
   const [absentMember, setAbsentMenmber] = useState([])
   const [presentMember, setPresentMember] = useState([])
   const [isAttendOpen, setIsAttendOpen] = useState(false)
+  const [attendStatus, setAttendStatus] = useState("")
 
 
   function handleClick(e) {
@@ -46,6 +51,7 @@ function NavMeetbar({ participants, member_id, class_id, memberName }) {
       classroom_id: class_id,
       member_id: member_id,
       lectureName: lectureName,
+      lecture_id: lecture_id,
       startTime: startTime,
       endTime: endTime
     }, {
@@ -57,10 +63,11 @@ function NavMeetbar({ participants, member_id, class_id, memberName }) {
 
       .then((response) => {
         console.log("take attendence ", response);
-        setLecture_id(response.data.lecture_id)
+        // setLecture_id(response.data.lecture_id)
         console.log(response.data.lecture_id, response.data.allmember);
 
         setAllMember(response.data.allmember)
+        memberr = response.data.allmember;
         setPresentMember(response.data.allmember)
 
 
@@ -77,6 +84,7 @@ function NavMeetbar({ participants, member_id, class_id, memberName }) {
         setIsLoading(false)
         setIsLectureOpen(false)
         setIsAttendOpen(true)
+        attendCal()
 
       })
   }
@@ -92,13 +100,43 @@ function NavMeetbar({ participants, member_id, class_id, memberName }) {
   };
 
 
+  function attendCal() {
+    console.log("we got call");
+
+
+    let particilist = [];
+    participants.forEach((value, key) => {
+      console.log(value.displayName.split('+')[1].trim());
+
+      particilist.push(value.displayName.split('+')[1].trim())
+    });
+
+    console.log("we goo dl here", particilist);
+
+    setAbsentMenmber(
+      memberr.filter(
+        (item) =>
+          !particilist.includes(item.professor_id) &&
+          !particilist.includes(item.student_id)
+      )
+    );
+
+    setPresentMember(memberr.filter(
+      (item) =>
+        particilist.includes(item.professor_id) ||
+        particilist.includes(item.student_id)
+    )
+    );
+
+    console.log(presentMember);
+  }
 
 
   function handdleAttend(e) {
-    
+
     setIsLectureOpen(true)
 
-      
+
     // let particilist = [];
     // participants.forEach((value, key) => {
     //   console.log(value.displayName.split('+')[1].trim());
@@ -109,27 +147,32 @@ function NavMeetbar({ participants, member_id, class_id, memberName }) {
     // console.log(particilist);
   }
 
+
+
+  /// submiting alll list here
   function submitAttend(params) {
-    
-    axios.post('/videocall/takeattendence',{ 
-      classroom_id: class_id ,
-      lecture_id:lecture_id,
-      presentMember:presentMember,
-      absentMember:absentMember
-      }, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
+
+    axios.post('/videocall/takeattendence', {
+      classroom_id: class_id,
+      lecture_id: lecture_id,
+      presentMember: presentMember,
+      absentMember: absentMember
+    }, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
+    }
     )
 
       .then((response) => {
         console.log("take attendence ", response);
+        setAttendStatus(response.data)
 
 
 
 
-      }) 
+
+      })
       .catch((err) => {
         console.log(err);
         setIsError(true)
@@ -140,6 +183,86 @@ function NavMeetbar({ participants, member_id, class_id, memberName }) {
         setIsLoading(false)
         setIsAttendOpen(false)
       })
+
+  }
+
+  /// take lecture name 
+
+  useEffect(() => {
+    setTakeName(true);
+
+  }, [])
+
+
+
+
+  /// handle Record 
+  function startRecord() {
+    meeting?.startRecording()
+    alert("record started")
+
+    axios.post("/videocall/startrecord", {
+      lecture_id: lecture_id,
+
+    }, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+
+
+    })
+      .then((res) => {
+        console.log("Recording Started", res);
+      })
+      .catch((err) => {
+        console.log(err);
+
+
+
+      })
+      .finally(() => {
+        console.log("log");
+
+      })
+
+
+  }
+
+
+  function takeNameSumbit() {
+
+    axios.post('/videocall/takerecord', {
+      classroom_id: class_id,
+      meetingId: meetingId,
+      lectureName: lectureName
+
+
+    }, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    }
+    )
+
+      .then((response) => {
+        console.log("take recordd", response);
+        setLecture_id(response.data)
+        console.log(response.data);
+
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsError(true)
+
+
+      })
+      .finally(() => {
+        setIsLoading(false)
+        setTakeName(false)
+
+
+      })
+
 
   }
 
@@ -312,7 +435,6 @@ button {
 
   if (isError) {
     console.log("this is place");
-
     return <div><h1>something went wrong </h1></div>;
   }
 
@@ -329,14 +451,27 @@ button {
           {/* Logo */}
           <a className="navbar-brand" href="#">Company Logo</a>
 
-
+          <div>
+            <button
+              onClick={()=>{startRecord()}}
+              disabled={meeting?.isRecording}
+            >
+              Start Recording
+            </button>
+            <button
+              onClick={() => meeting?.stopRecording()}
+              disabled={!meeting?.isRecording}
+            >
+              Stop Recording
+            </button>
+          </div>
           <div className="d-flex align-items-center gap-3">
             <a href="#" onClick={handleClick} className="d-flex align-items-center text-white d-none d-sm-flex">
               <i className="bi bi-people me-1"></i> <span className="d-none d-md-inline">Participants</span>
             </a>
-            <a href="#" onClick={handdleAttend} className="d-flex align-items-center text-white d-none d-sm-flex">
+            {attendStatus === "deactivate" ? <span>-</span> : (<a href="#" onClick={handdleAttend} className="d-flex align-items-center text-white d-none d-sm-flex">
               <i className="bi bi-gear me-1"></i> <span className="d-none d-md-inline" >Take Attendance</span>
-            </a>
+            </a>)}
           </div>
         </div>
       </nav>
@@ -366,13 +501,7 @@ button {
         <h2 className="lecture-heading">Lecture Details</h2>
 
         <label className="lecture-label">Lecture Name:</label>
-        <input
-          type="text"
-          value={lectureName}
-          onChange={(e) => setLectureName(e.target.value)}
-          placeholder="Enter lecture name"
-          className="lecture-input"
-        />
+        <label>{lectureName}</label>
 
         <label className="lecture-label">Start Time:</label>
         <input
@@ -423,6 +552,23 @@ button {
         </div>
         <button onClick={submitAttend}>Submit</button>
       </div>}
+
+      {takeName && <div className="lecture-window">
+        <h2 className="lecture-heading">Lecture Details</h2>
+
+        <label className="lecture-label">Enter Lecture Name:</label>
+        <input
+          type="text"
+          value={lectureName}
+          onChange={(e) => setLectureName(e.target.value)}
+          placeholder="Enter lecture name"
+          className="lecture-input"
+        />
+
+
+        <button onClick={()=>{takeNameSumbit()}} className="lecture-button">Submit</button>
+      </div>
+      }
     </>
   );
 }

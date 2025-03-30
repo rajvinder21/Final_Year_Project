@@ -6,8 +6,8 @@ import moment from "moment/moment.js";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadFile,downloadFile } from "../../service/cloudserver.js";
 import { createPostWithFile,createAssignment,
-  getPosts,getAssignments, editPost,
-   delPost, delAssign,getMemberName } from "../../db.js";
+  getPosts,getAssignments, editPost,getMember,
+   delPost, delAssign,getMemberName,getLecture } from "../../db.js";
 import { v4 as uuidv4 } from "uuid";
 
  
@@ -354,7 +354,20 @@ router.post("/createAssignment", upload.single("file"), async (req, res) => {
 
 // })
 
+router.get('/getlecture', async (req,res)=>{
+  const classroom_id = req.headers.classroom_id ;
 
+  const lecturelist = await getLecture(classroom_id);
+  const memberList = await getMember(classroom_id) 
+  // console.log(data);
+  
+
+ 
+  res.send(data)
+  res.status(200)
+  
+
+})
 
 
 

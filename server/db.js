@@ -282,7 +282,27 @@ async function takeAttend(lecture_id,member_id,attendance_status) {
   const [result] = await pool.query(`INSERT INTO attendance(lecture_id,member_id,attendance_status) VALUES(?,?,?)`,[lecture_id,member_id,attendance_status])
 }
 
+async function getLecture(classroom_id) {
+  const [result] = await pool.query("SELECT * FROM lectures WHERE classroom_id = ?", [classroom_id])
+  return result ;
+}
 
+async function takerecord(classroom_id,lecture_id,lecture_name,meetingId,date,atendstat) {
+  const [result] = await pool.query("INSERT INTO records(classroom_id,lecture_id,lecture_name, meeting_id,date,status) VALUES(?,?,?,?,?,?)",[classroom_id,lecture_id,lecture_name,meetingId,date,atendstat])
+  return result;
+}
+
+async function startRecord(lecture_id,statusAttend) {
+  const [result] = await pool.query("UPDATE records SET status = ? WHERE lecture_id = ?",[statusAttend, lecture_id]);
+  return result;
+}
+
+async function getAttendance(classroom_id) {
+  const [result] = await pool.query(`SELECT `)
+}
+
+
+ 
 
 export {
   getUser, createSignUp, getAdminDetail, setTempSignup, getOtp, login,
@@ -295,7 +315,7 @@ export {
 
   getPosts, getAssignments, delAssign,
   createMeet, checkMeet, editPost, delPost,
-  createLecture, takeAttend 
+  createLecture, takeAttend , getLecture,takerecord,startRecord
 };
 
 

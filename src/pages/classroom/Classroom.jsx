@@ -7,6 +7,7 @@ import SideBar from './SideBar'
 import NavbarC from './NavbarC'
 import SectionTitle from './SectionTitle';
 import Cards from './Cards';
+import Attendance from './Attendance';
 import FooterClassroom from './FooterClassroom';
 import MainNavbar from './MainNavbar';
 import ChatroomWindow from './window/ChatroomWindow';
@@ -226,7 +227,7 @@ const Modeldata = {
         
             {curentSection === "work" && <WorkWindow data={currentclass}/>} {/* For "Work" */}
             {curentSection === "member" && <MemberWindow data={currentclass} />} {/* For "Member" */}
-           
+            {curentSection === "attendance" && <Attendance data={currentclass}/>}
             {showModal && <PostModel data={Modeldata} postEdit={postV ? (postEdit) : ({})} handleCloseModal={handleCloseModal} />}
 
           <button className="btn btn-primary rounded-circle position-fixed" style={{ bottom: '2rem', right: '2rem' }}

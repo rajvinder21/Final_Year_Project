@@ -264,7 +264,7 @@ function MeetingView(props) {
       {joined && joined == "JOINED" ? (
         <div>
        
-        <NavMeetbar participants={participants} class_id={props.class_id} memberName={props.memberName} member_id={props.member_id}/>
+        <NavMeetbar participants={participants} class_id={props.class_id} memberName={props.memberName} member_id={props.member_id} meetingId={props.meetingId}/>
           <div className=" video-area">
 
 
@@ -429,6 +429,7 @@ function Meet() {
     
   };
 
+  console.log(meetingId,authToken);
   
 console.log("testing for id",member_id,memberName,);
 
@@ -454,6 +455,11 @@ console.log("testing for id",member_id,memberName,);
         micEnabled: true,
         webcamEnabled: true,
         name: `${memberName}+${member_id}`,
+        recording: {
+          enabled: true, // Enable recording
+          autoStart: false, // Set true if you want automatic recording
+          // webhookUrl: "your-webhook-url", // Optional, to receive recording events
+        },
       }}
       token={authToken}
     >
