@@ -8,7 +8,7 @@ function Cards({ data, postClick }) {
   const [listt, setList] = useState([])
   const [lectList, setLectList] = useState([])
   const [active, setActive] = useState("posts");
-  const [meeting_id,setMeetig_id] = useState("")
+  const [meeting_id, setMeeting_id] = useState([])
   const navigate = useNavigate();
 
 
@@ -52,8 +52,8 @@ function Cards({ data, postClick }) {
         }
       })
         .then(function (response) {
-          console.log("dl imported lecture ",response.data);
-          setMeetig_id(response.data.meeting_id)
+          console.log("dl imported lecture ", response.data);
+          setMeeting_id(response.data.videos)
         })
         .catch((err) => {
           console.log(err, "this we got");
@@ -81,32 +81,13 @@ function Cards({ data, postClick }) {
 
   }
 
-// lecture clicked 
+  // lecture clicked 
 
-function onClickLecture() {
-  setActive("lectures")
-
-  axios.get('/', {
-    headers: {
-      classroom_id: data
-    }
-  })
-    .then(function (response) {
-      console.log("dl imported lecture ",response.data);
-      setMeetig_id(response.data.meeting_id)
-    })
-    .catch((err) => {
-      console.log(err, "this we got");
-      setIsError(true)
-
-    })
-    .finally(() => {
-      setIsLoading(false)
+  function onClickLecture() {
+    setActive("lectures")
 
 
-    })
-
-}
+  }
 
 
   // code of if get error and loading 
@@ -145,7 +126,7 @@ function onClickLecture() {
         </button>
       </div>
 
-      {active === "posts" ? ( <div className="row mt-3">
+      {active === "posts" ? (<div className="row mt-3">
         {listt.length === 0 ? (
           <p className="text-muted fs-5">No classrooms created yet</p>
         ) : (
@@ -194,14 +175,34 @@ function onClickLecture() {
             </div>
           ))
         )}
-      </div>): <div>
-      <h2>hellowrold</h2>
-      
-      </div> }
-     
+      </div>) : <div>
+        <h2>Lecture</h2>
+        <div className=" container mx-auto p-4">
+      <h2 className="text-2xl font-bold mb-4">Recorded Lectures</h2>
+      <div className="video-width">
+        {meeting_id.map((meet) => (
+          <div key={meet.id} className="border rounded-lg  bg-white">
+            <h3 className="font-semibold mb-2">{meet.createdAt}</h3>
+            <div className="flex justify-center">
+              <video controls className=" rounded-md" width={'80%'}>
+                <source src={meet.fileUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+      </div>}
+
 
       <style>
         {`
+
+   .video-width{
+   width:70%;
+   }
+
   .border-hover {
     transition: all 0.3s ease;
     border: 1px solid rgba(0,0,0,0.1);
