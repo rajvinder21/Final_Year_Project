@@ -297,8 +297,14 @@ async function startRecord(lecture_id,statusAttend) {
   return result;
 }
 
-async function getAttendance(classroom_id) {
-  const [result] = await pool.query(`SELECT `)
+async function getAllAttendance() {
+  const [result] = await pool.query(`SELECT * FROM attendance`);
+  return result ;
+}
+
+async function videolecture(class_id) {
+  const [result] = await pool.query(`SELECT * FROM records WHERE classroom_id= ? and  status = ? `,[class_id,"true"])
+  return result;
 }
 
 
@@ -315,7 +321,9 @@ export {
 
   getPosts, getAssignments, delAssign,
   createMeet, checkMeet, editPost, delPost,
-  createLecture, takeAttend , getLecture,takerecord,startRecord
+  createLecture, takeAttend , getLecture,
+  takerecord,startRecord, getAllAttendance,
+  videolecture
 };
 
 

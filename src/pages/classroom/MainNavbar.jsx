@@ -20,6 +20,10 @@ export default function MainNavbar({setCurrentSection,onLogout}) {
     setCurrentSection('member')
   }
 
+  function onAttendance() {
+    setCurrentSection('attendance')
+  }
+
 
   function logout() {
     onLogout()
@@ -40,6 +44,7 @@ export default function MainNavbar({setCurrentSection,onLogout}) {
       <a className="nav-link px-3" href="#" onClick={onClassroomClick}>Classroom </a>
       <a className="nav-link px-3" href="#" onClick={onWork}> Work </a>
       <a className="nav-link px-2" href="#" onClick={onMember}> Member</a>
+      <a className="nav-link px-2" href="#" onClick={onAttendance}> Attendance</a>
     </div>
 
     <button className="btn btn-outline-secondary" onClick={logout}>Logout</button>

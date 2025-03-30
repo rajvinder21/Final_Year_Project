@@ -152,6 +152,9 @@ function NavMeetbar({ participants, member_id, class_id, memberName, meetingId }
   /// submiting alll list here
   function submitAttend(params) {
 
+    console.log(absentMember);
+    
+
     axios.post('/videocall/takeattendence', {
       classroom_id: class_id,
       lecture_id: lecture_id,

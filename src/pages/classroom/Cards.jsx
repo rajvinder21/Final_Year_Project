@@ -8,6 +8,7 @@ function Cards({ data, postClick }) {
   const [listt, setList] = useState([])
   const [lectList, setLectList] = useState([])
   const [active, setActive] = useState("posts");
+  const [meeting_id,setMeetig_id] = useState("")
   const navigate = useNavigate();
 
 
@@ -45,14 +46,14 @@ function Cards({ data, postClick }) {
 
     async function getlectdata() {
 
-      axios.get('/classroom/getpost', {
+      axios.get('/classroom/videolecture', {
         headers: {
           classroom_id: data
         }
       })
         .then(function (response) {
           console.log("dl imported lecture ",response.data);
-          setLectList(response.data[0])
+          setMeetig_id(response.data.meeting_id)
         })
         .catch((err) => {
           console.log(err, "this we got");
@@ -79,6 +80,34 @@ function Cards({ data, postClick }) {
     console.log(path);
 
   }
+
+// lecture clicked 
+
+function onClickLecture() {
+  setActive("lectures")
+
+  axios.get('/', {
+    headers: {
+      classroom_id: data
+    }
+  })
+    .then(function (response) {
+      console.log("dl imported lecture ",response.data);
+      setMeetig_id(response.data.meeting_id)
+    })
+    .catch((err) => {
+      console.log(err, "this we got");
+      setIsError(true)
+
+    })
+    .finally(() => {
+      setIsLoading(false)
+
+
+    })
+
+}
+
 
   // code of if get error and loading 
 
@@ -107,7 +136,7 @@ function Cards({ data, postClick }) {
           Posts
         </button>
         <button
-          onClick={() => setActive("lectures")}
+          onClick={() => onClickLecture()}
           disabled={active === "lectures"}
           className={`border border-black px-4 py-2 text-lg ${active === "lectures" ? "bg-gray-200 cursor-not-allowed" : "bg-white"
             }`}

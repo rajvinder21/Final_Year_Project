@@ -6,8 +6,9 @@ import moment from "moment/moment.js";
 import { v2 as cloudinary } from 'cloudinary';
 import { uploadFile,downloadFile } from "../../service/cloudserver.js";
 import { createPostWithFile,createAssignment,
-  getPosts,getAssignments, editPost,getMember,
-   delPost, delAssign,getMemberName,getLecture } from "../../db.js";
+  getPosts,getAssignments, editPost,
+   delPost, delAssign,getMemberName,
+   getLecture ,getAllAttendance,videolecture} from "../../db.js";
 import { v4 as uuidv4 } from "uuid";
 
  
@@ -358,10 +359,37 @@ router.get('/getlecture', async (req,res)=>{
   const classroom_id = req.headers.classroom_id ;
 
   const lecturelist = await getLecture(classroom_id);
-  const memberList = await getMember(classroom_id) 
-  // console.log(data);
+  const memberList = await getMember(classroom_id);
+  const attendance = await getAllAttendance();
+
+
   
 
+  const students = [...new Set(memberList.map(a => a.professor_id || a.student_id))]
+
+  const table = students.map(studentid =>{
+    let row =  {student:studentid};
+    lecturelist.forEach((item, index)=>{
+      const record = attendance.find((a)=> a.lecture_id === item.lecture_id && a.member_id === studentid);
+      console.log(record); 
+      
+      row[item.date] = record?.attendance_status === "present" ? 1 : 0 ; 
+    })
+
+    return row 
+  })
+
+  console.log(attendance);
+  
+  
+  // console.log(data); 
+  
+const data = {
+  lectures:lecturelist,
+  students:memberList,
+  attendances:table,
+
+}
  
   res.send(data)
   res.status(200)
@@ -369,6 +397,42 @@ router.get('/getlecture', async (req,res)=>{
 
 })
 
+
+router.get('/videolecture', async (req,res)=>{
+    const classroom_id = req.headers.classroom_id ;
+  
+    const data = await videolecture(classroom_id);
+    let raw;
+    let myarr = []
+    console.log(data);
+    myarr = data; 
+
+    myarr.map(async(item,index)=>{
+      console.log(item.meeting_id);
+      
+      const res = await fetch(`https://api.videosdk.live/v2/recordings/`, {
+        method: "GET",
+        headers: {
+          authorization: `${process.env.VIDEO_TOKEN}`,
+          meeting_id:`${item.meeting_id}`,
+          "Content-Type": "application/json",
+        },
+        
+      });
+      //Destructuring the roomId from the response
+      raw = await res.json();
+      console.log(raw);
+      
+    })
+   
+  
+   
+    res.send(raw)
+    res.status(200)
+    
+  
+  })
+  
 
 
 export default router;
