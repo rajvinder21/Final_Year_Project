@@ -453,7 +453,7 @@ button {
         <div className="container">
           {/* Logo */}
           <a className="navbar-brand" href="#">Company Logo</a>
-
+    
           <div>
             <button
               onClick={()=>{startRecord()}}
@@ -500,7 +500,7 @@ button {
         </div>
       }
 
-      {isLectureOpen && <div className="lecture-window">
+      {member_id.startsWith("prof") && isLectureOpen && <div className="lecture-window">
         <h2 className="lecture-heading">Lecture Details</h2>
 
         <label className="lecture-label">Lecture Name:</label>
@@ -526,7 +526,7 @@ button {
       </div>
       }
 
-      {isAttendOpen && <div className="attendance-window">
+      {member_id.startsWith("prof") && isAttendOpen && <div className="attendance-window">
         <div className="attendance-header">
           <h2>Attendance</h2>
           <button onClick={() => { setIsAttendOpen(false) }} className="close-btn">&times;</button>
@@ -556,7 +556,7 @@ button {
         <button onClick={submitAttend}>Submit</button>
       </div>}
 
-      {takeName && <div className="lecture-window">
+      {member_id.startsWith("prof") && takeName && <div className="lecture-window">
         <h2 className="lecture-heading">Lecture Details</h2>
 
         <label className="lecture-label">Enter Lecture Name:</label>

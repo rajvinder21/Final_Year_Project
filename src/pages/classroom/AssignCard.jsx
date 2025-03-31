@@ -50,6 +50,14 @@ useEffect(() => {
 
 }, [data])
 
+function clickTitle(path) {
+  (data.member).startsWith("prof") ? 
+  AssignClick(path) : filePrompt(path)
+
+  console.log(path);
+
+}
+
 
   // code of if get error and loading 
 
@@ -76,7 +84,7 @@ useEffect(() => {
           </div>
           <div className="col-md-6">
             <div className="card-body">
-              <h5 className="card-title card-title-styled" >{row.title}</h5>
+              <h5 className="card-title card-title-styled" onClick={clickTitle(row)} >{row.title}</h5>
               <p className="card-text card-description">{row.description}</p>
               <p className="card-text created-date"><strong>Created on:</strong> {row.date}</p> 
             </div>

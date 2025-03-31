@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 ;
 
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link,data } from "react-router-dom";
 
-export default function MainNavbar({setCurrentSection,onLogout}) {
+export default function MainNavbar({setCurrentSection,onLogout,data}) {
    const navigate = useNavigate();
 
   
@@ -44,8 +44,11 @@ export default function MainNavbar({setCurrentSection,onLogout}) {
       <a className="nav-link px-3" href="#" onClick={onClassroomClick}>Classroom </a>
       <a className="nav-link px-3" href="#" onClick={onWork}> Work </a>
       <a className="nav-link px-2" href="#" onClick={onMember}> Member</a>
-      <a className="nav-link px-2" href="#" onClick={onAttendance}> Attendance</a>
-    </div>
+      {data.member?.substring(0, 4) === "prof" ? (
+  <a className="nav-link px-2" href="#" onClick={onAttendance}> 
+    Attendance
+  </a>
+) : null}    </div>
 
     <button className="btn btn-outline-secondary" onClick={logout}>Logout</button>
   </div>

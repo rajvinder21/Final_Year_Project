@@ -225,6 +225,11 @@ async function createAssignment(assign_id, class_id, title, descript, link, file
   return result
 }
 
+async function submitAssignment(assign_id, link, student_id,student_name, date,late) {
+
+  const result = await pool.query(`INSERT INTO assign_completes(assign_id,link,student_id,Student_name,date,late) VALUES(?,?,?,?,?,?)`, [assign_id, link, student_id,student_name, date, late])
+  return result
+}
 async function getPosts(class_id) {
   const result = await pool.query(`SELECT * FROM posts WHERE classroom_id = ?`, [class_id])
   return result;
@@ -317,7 +322,7 @@ export {
   editStudent, editProfessor,
   delStudent, delProfessor,    /// they all are used in admin panel 
   getMemberClassroom, getMemberName,      //// func use in classrooms
-  createPostWithFile, createAssignment, /// function for postss 
+  createPostWithFile, createAssignment,submitAssignment, /// function for postss 
 
   getPosts, getAssignments, delAssign,
   createMeet, checkMeet, editPost, delPost,

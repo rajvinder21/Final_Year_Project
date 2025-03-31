@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Post({ data, closePost,onPostEdit,onPostDel}) {
+function Post({ data,member, closePost,onPostEdit,onPostDel}) {
 
  function onClickEdit(row) {
   // console.log("we areeeee loging",row);
@@ -21,16 +21,19 @@ function Post({ data, closePost,onPostEdit,onPostDel}) {
 
      
       <h2>Posts</h2>
+     
       <button className="close-button" onClick={closePost} >
         <i className="bi bi-x"></i>
       </button>
+      {(member.startsWith("prof")) && (
+        <div>
       <button className="close-button" onClick={()=>{onClickEdit(data)}} >
         <i className="bi  bi-pencil-square"></i>
       </button>
       <button className="close-button" onClick={()=>{onClickDel(data)}} >
         <i className="bi bi-trash3-fill"></i>
       </button>
-
+</div>)}
       <div className="content-container">
         <h1 className="post-heading">{data.title}</h1>
 

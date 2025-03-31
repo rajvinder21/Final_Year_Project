@@ -3,8 +3,21 @@ import mysql from "mysql2";
 import bodyParser from "body-parser";
 import cors from "cors"
 import cookieParser from "cookie-parser";
+import http from "http";
+import {Server} from "socket.io"
+
 
 const app = express();
+
+const server = http.createServer(app)
+const io =  new Server(server, {
+  cors: {
+    origin: "*", // Allow all origins (for development)
+    methods: ["GET", "POST"],
+  },
+})
+
+
 const PORT = 8080;
 // app.use(express.static('build'))
 app.use(cors());
@@ -24,6 +37,22 @@ import { adminAuth } from "./routes/Auth/authMiddleware.js";
 import video from "./routes/videocall/video.js"
 
 
+
+io.on("connection", (socket) => {
+  console.log("A user connected:", socket.id);
+
+
+socket.on("chatMessage", (message) => {
+  io.emit("chatMessage", message);
+  console.log("msg ", message);
+   // Broadcast message to all clients
+});
+
+socket.on("disconnect", () => {
+  console.log("User disconnected:", socket.id);
+});
+
+});
 
 
 // signup 
@@ -55,7 +84,7 @@ app.use('/videocall',adminAuth,video)
 
 
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("virtual classs is live noww at " + PORT);
 
 })

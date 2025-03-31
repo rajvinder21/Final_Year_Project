@@ -7,7 +7,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { uploadFile,downloadFile } from "../../service/cloudserver.js";
 import { createPostWithFile,createAssignment,
   getPosts,getAssignments, editPost,
-   delPost, delAssign,getMemberName,
+   delPost, delAssign,getMemberName,submitAssignment,
    getLecture ,getAllAttendance,videolecture} from "../../db.js";
 import { v4 as uuidv4 } from "uuid";
 
@@ -54,7 +54,7 @@ router.get("/getclassroom", async (req, res) => {
 
   const classrooms = await getMemberClassroom(member_id)
   const memberData = await getMemberName(member_id)
-  console.log(memberData);
+  // console.log(memberData);
   
   const data = {
     classrooms: classrooms[0],
@@ -90,7 +90,7 @@ router.post('/postedit', upload.single("file"), async (req,res)=>{
   const file_name = req.body.freeName;
   const gettime =  moment().format('YYYY/MM/DD HH:mm:ss')
   
-  console.log("successfull",post_id);
+  // console.log("successfull",post_id);
 
   if (req.file) {
 
@@ -143,7 +143,7 @@ router.get('/delpost', async (req,res)=>{
   const post_id = req.headers.post_id ;
 
   const result = await delPost(post_id);
-  console.log(result);
+  // console.log(result);
 
   
     
@@ -206,7 +206,7 @@ router.get('/getassignment', async (req,res)=>{
   const classroom_id = req.headers.classroom_id ;
 
   const data = await getAssignments(classroom_id);
-  console.log(classroom_id,data);
+  // console.log(classroom_id,data);
   
 
  
@@ -340,6 +340,62 @@ router.post("/createAssignment", upload.single("file"), async (req, res) => {
 
 
 })
+
+
+// submit assignment
+
+router.post("/submitassignment", upload.single("file"), async (req, res) => {
+  const assign_id = req.body.assign_id;
+  const class_id = req.body.classroom_id;
+  const file = req.file;
+  const file_name = req.body.freeName;
+  const gettime = moment().format('YYYY/MM/DD HH:mm:ss')
+  //const submission = req.body.submission ;
+  const student_name = req.body.student_name;
+ 
+
+
+  if (req.file) {
+
+   
+    console.log(file_name);
+    
+
+    try {
+      const fileUrl = req.file.path; 
+      const fileId = req.file.filename; 
+      console.log(fileId,fileUrl);
+
+
+      const fileresult = await uploadFile(fileUrl,class_id)
+      console.log(fileresult,fileresult.secure_url);   
+      const link = fileresult.secure_url
+      // adding data to database
+      const data = await submitAssignment(assign_id,link,file_name,student_id,late,gettime,"true")
+      console.log("database log with file:- ", data)
+    } catch (error) {
+      console.log("we got err",error);
+      
+    }
+
+
+  
+    res.status(200)
+    res.send()
+
+
+  }
+
+  else {
+    res.status(200)
+    res.send("failed")
+  }
+
+  
+
+
+})
+
 
 // router.get('/getclassattendlist', async (req,res)=>{
 //   const classroom_id = req.headers.classroom_id ;
@@ -475,7 +531,7 @@ router.get("/videolecture", async (req, res) => {
         createdAt: item.createdAt,
         duration: item.file.meta.duration,
       }));
-    console.log("Extracted Video Links:", videoLinks);
+    // console.log("Extracted Video Links:", videoLinks);
 
     res.status(200).json({ videos: videoLinks });
   } catch (error) {

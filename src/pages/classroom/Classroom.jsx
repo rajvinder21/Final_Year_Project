@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import { Link, useNavigate } from "react-router-dom";
 import axios, { Axios } from "axios";
 
+
 import SideBar from './SideBar'
 import NavbarC from './NavbarC'
 import SectionTitle from './SectionTitle';
@@ -14,14 +15,18 @@ import ChatroomWindow from './window/ChatroomWindow';
 import WorkWindow from './window/WorkWindow';
 import MemberWindow from './window/MemberWindow';
 import PostModel from './window/PostModel';
-
+import SubmittedAssignments from './SubmittedAssignments';
+import { io } from "socket.io-client";
 import './classroom.css';
 import Post from './Post';
 
 
-
 function Classrom() {
 
+  const socket = io("http://localhost:8080", {
+    transports: ["websocket"], 
+    withCredentials: true
+  });
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showChatroom, setShowChatroom] = useState(false);
@@ -42,9 +47,44 @@ function Classrom() {
   const [postData, setPostData] = useState([])
   const [postEdit, setPostEdit] = useState()
 
+// assign 
+const [asssignV, setAssignV] = useState(false)
+const [assignData, setAssignData] = useState([])
+
+  // messages 
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  
   const navigate = useNavigate();
+// recevie all msggg
+// socket.on("chatMessage", (msg) => {
+//   console.log(msg,messages);
+  
+//         if (msg.classroom_id === currentclass) {
+//           setMessages((prevMessages) => [...prevMessages, msg]);
+//         }
+//         return () => {
+//           socket.off("chatMessage"); // Cleanup
+//         };
+//       });
+  
+  useEffect(()=>{
+    socket.on("chatMessage", (msg) => {
+      console.log("New message received:", msg);
+
+  
+        
+        setMessages((prevMessages) => [...prevMessages, msg]);
+      
+    });
+
+    return () => {
+      socket.off("chatMessage"); // ✅ Cleanup listener on unmount
+    };
+  },[])   
 
   useEffect(() => {
+
 
     async function myget() {
       setIsLoading(true)
@@ -99,6 +139,23 @@ function Classrom() {
     setMemberData(data)
   }
 
+// code for assign 
+
+function filePrompt(path) {
+  
+}
+
+function assignClick(data) {
+  setAssignV(true)
+
+  console.log("we go t you post here ", data);
+ setAssignData(data)
+  
+}
+function closeAssignt() {
+  setAssignV(false)
+}
+
 
 /// code for post here:- 
 
@@ -118,8 +175,6 @@ function onPostEdit(data) {
   setPostEdit(data)
   setShowModal(true)
   console.log("On Post edit clickeddd", data);
-  
-
 }
 
 function onPostDel(data) {
@@ -178,6 +233,8 @@ function setCurrentSection(data) {
 
   function onChatRoom(data) {
     setShowChatroom(data)
+    console.log(messages);
+    
   }
 
  
@@ -197,11 +254,30 @@ function setCurrentSection(data) {
     );
   }
 
+  const getMsg = ()=>{
+    return messages;
+  }
+
+  const sendMessage = (msg) => {
+    if (msg.trim()) {
+      const chatData = {
+        userId: member_id,
+        username: memberData.fname + " " + memberData.lname,
+        text: msg,
+        classroom_id: currentclass,
+      };
+      socket.emit("chatMessage", chatData); // Send message to server
+      setMessage(""); // Clear input field
+    }
+  };
+
+
 const Modeldata = {
   member:member_id,
   class_id:currentclass,
-  memberName: memberData.fname + " " + memberData.lname
+  memberName: memberData.fname + " " + memberData.lname ,
 }
+
 
 
 
@@ -215,27 +291,29 @@ const Modeldata = {
 
         <div className="col-md-9 col-lg-10 main-content">
      
-          <MainNavbar setCurrentSection={setCurrentSection} onLogout={onLogout}/>
+          <MainNavbar setCurrentSection={setCurrentSection} onLogout={onLogout} data={Modeldata}/>
       
 
          
  
           <SectionTitle  data={Modeldata} onChatRoom={onChatRoom} />
           <div>
-          {showChatroom ? <ChatroomWindow onChatRoom={onChatRoom} /> : <p></p> }
-          {postV ? <Post data={postData} closePost={closePost} onPostDel={onPostDel} onPostEdit={onPostEdit} /> : (curentSection === "classroom" && <Cards data={currentclass} postClick={postClick} />)}
-        
-            {curentSection === "work" && <WorkWindow data={currentclass}/>} {/* For "Work" */}
+          {showChatroom ? <ChatroomWindow onChatRoom={onChatRoom} data={Modeldata} sendMessage={sendMessage} messages={messages} getMsg={getMsg} /> : <p></p> }
+          {postV ? <Post data={postData} member={Modeldata.member} closePost={closePost} onPostDel={onPostDel} onPostEdit={onPostEdit} /> : (curentSection === "classroom" && <Cards data={currentclass} member={Modeldata} postClick={postClick} />)}
+           {asssignV ? <SubmittedAssignments data={assignData} member={Modeldata.member} closePost={closeAssignt} /> : curentSection === "work" && <WorkWindow data={currentclass} assignClick={assignClick}  />}
+            
             {curentSection === "member" && <MemberWindow data={currentclass} />} {/* For "Member" */}
             {curentSection === "attendance" && <Attendance data={currentclass}/>}
             {showModal && <PostModel data={Modeldata} postEdit={postV ? (postEdit) : ({})} handleCloseModal={handleCloseModal} />}
 
+
+            {(Modeldata.member.startsWith("prof")) && (
           <button className="btn btn-primary rounded-circle position-fixed" style={{ bottom: '2rem', right: '2rem' }}
            onClick={handleOpenModal}
           >
             +
           </button>
-
+            )}
 
 
           </div>
