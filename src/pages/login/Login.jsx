@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Footer from "../Home_Components/Footer";
 
 function Login() {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [emError, setEmError] = useState(false)
 
   const navigate = useNavigate();
-  let success ;
+  let success;
   const emailId = email;
   const passId = pass;
   function btnClicked(e) {
@@ -31,11 +33,13 @@ function Login() {
         )
           .then((res) => {
             console.log(res);
-             success = res.headers.success;
-
+            success = res.headers.success;
+            if (!success) {
+              emError(true)
+            }
             console.log(success);
 
-            
+
 
             // const navigat = res.headers.navigat;
             // console.log(res, navigat)
@@ -68,9 +72,10 @@ function Login() {
       finally {
         setIsLoading(false)
         if (!isError) {
-          if (success){
+          if (success) {
             navigate("/classroom")
           }
+          
 
         }
       }
@@ -90,11 +95,23 @@ function Login() {
   if (isError) {
     console.log("this is place");
 
-    return <div><h1>something went wrong </h1></div>;
+    return <div style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+      backgroundColor: "#4b4342",
+    }}><h1>something went wrong </h1></div>;
   }
 
   if (isLoading) {
-    return <div><h1>this is loading </h1></div>;
+    return <div style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+      backgroundColor: "#4b4342",
+    }}><h1>this is loading </h1></div>;
   }
 
 
@@ -104,7 +121,7 @@ function Login() {
 
   return (
     <div>
-      <h2>Logins</h2>
+      {/* <h2>Logins</h2>
       <form>
         <p>Email</p>
         <input type="text" value={email} onChange={(e) => { setEmail(e.target.value) }} required /><br />
@@ -114,8 +131,56 @@ function Login() {
 
 
       </form>
-      <Link to={"/admin-login"}>Admin Login</Link>
+      <Link to={"/admin-login"}>Admin Login</Link> */}
 
+
+
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        backgroundColor: "#4b4342",
+      }}>
+        <div style={{
+          backgroundColor: "#6b6362",
+          padding: "40px",
+          borderRadius: "20px",
+          width: "350px",
+          textAlign: "center",
+        }}>
+          <h2 style={{ color: "white" }}>Log in</h2>
+          <form >
+            <div className="mb-3 text-start">
+              <label className="form-label" style={{ color: "white" }}>Email</label>
+              <input
+                type="email"
+                className="form-control"
+                value={email}
+                onChange={(e) => { setEmail(e.target.value) }}
+                required
+              />
+            </div>
+            <div className="mb-3 text-start">
+              <label className="form-label" style={{ color: "white" }}>Password</label>
+              <input
+                type="password"
+                className="form-control"
+                value={pass}
+                onChange={(e) => { setPass(e.target.value) }}
+                required
+              />
+            </div>
+            <button type="submit" onClick={ (e)=>{btnClicked(e)}} className="btn btn-primary w-100">Next</button>
+          </form>
+          <p className="mt-3" style={{ color: "white" }}>
+            
+            {emError && <p>Email or Password is Wrong</p>}
+          </p>
+
+        </div>
+      </div>
+      <Footer />
     </div>
   )
 }

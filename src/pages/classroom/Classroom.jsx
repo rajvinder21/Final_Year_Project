@@ -294,6 +294,7 @@ const Modeldata = {
 
   return (
     <div className="container-fluid">
+    
       <NavbarC toggleSidebar={toggleSidebar} />
       <div className="row">
       <div className={`col-md-3 col-lg-2 h-100 sidebar ${sidebarOpen ? 'open' : ''}`}>
