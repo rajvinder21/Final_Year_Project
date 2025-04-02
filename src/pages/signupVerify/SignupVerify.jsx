@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../Home_Components/Navbar";
 import axios, { Axios } from "axios" ;
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,34 @@ function SignupVerify() {
     const navigate = useNavigate();
    
     let success ;
+
+    useEffect( ()=>{
+      async function myget() {
+        setIsLoading(true)
+        axios.get('/signup-verify', {
+          headers:{
+            "admin_id":admin_id,
+          }
+        })
+  
+          .then((response) => {
+            console.log( response)
+  
+  
+          })
+          .catch((err) => {
+            console.log(err);
+           
+  
+  
+          })
+          .finally(() => {
+           
+  
+          })
+      }
+      myget()
+    }, [])
     
     function  Clicked(e) {
 

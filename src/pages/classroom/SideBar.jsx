@@ -7,7 +7,8 @@ export default function SideBar({classSelect, SetMember,SetMemberData}) {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [classrooms, setclassrooms] = useState([]);
-  const [selectClass, setSelectClass] = useState('')
+  const [selectClass, setSelectClass] = useState('');
+ 
   
 
 
@@ -18,12 +19,13 @@ export default function SideBar({classSelect, SetMember,SetMemberData}) {
       axios.get('/classroom/getclassroom')
 
         .then((response) => {
-          console.log("ggetclassroom", response);
+          console.log("ggetclassroom", response.data.classrooms[0].classroom_id);
 
 
           setclassrooms(response.data.classrooms);
-          classSelect(response.data.classrooms[0].classroom_id)
-          setSelectClass(response.data.classrooms[0].classroom_id)
+          classSelect(response.data.classrooms[0])
+          setSelectClass(response.data.classrooms[0])
+          
           SetMember(response.data.member_id)
           SetMemberData(response.data.memberData[0])
 
@@ -67,10 +69,10 @@ export default function SideBar({classSelect, SetMember,SetMemberData}) {
       <ul className="list-unstyled">
 
         {/* Here classroom name showsss */}
-        {(classrooms.length == 0) ? <p> not created any classroom</p> : classrooms.map((row, id) => <li key={id} onClick={() => { onClassSelect(row.classroom_id) }}
+        {(classrooms.length == 0) ? <p> not created any classroom</p> : classrooms.map((row, id) => <li key={id} onClick={() => { onClassSelect(row) }}
         style={{
             padding: '10px',
-            backgroundColor: selectClass === row.classroom_id ? 'lightblue' : 'transparent',
+            backgroundColor: selectClass.classroom_id === row.classroom_id ? 'lightblue' : 'transparent',
             
             cursor: 'pointer'
           }}

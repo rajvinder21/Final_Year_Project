@@ -37,6 +37,7 @@ function Classrom() {
 
   //sidenavbar  
   const [sidebarOpen, setSidebarOpen] = useState(false);
+   const [cname, setCname] = useState('');
   const [currentclass, setCurrentClass] = useState('');
   const [member_id, setMember_id] = useState('')
   const [memberData, setMemberData] = useState([])
@@ -125,9 +126,13 @@ const [assignData, setAssignData] = useState([])
     setSidebarOpen(!sidebarOpen);
   }
 
-  function classSelect(id) {
-    console.log("got classroom",id);
-    setCurrentClass(id)
+  function classSelect(row) {
+    console.log("gotfsdfd  classroom",row.classroom_id);
+    setCurrentClass(row.classroom_id);
+    setCname(row.cname)
+
+    
+   
   }
 
   function SetMember(id) {
@@ -243,9 +248,15 @@ function setCurrentSection(data) {
 
   // code of if get error and loading 
 
+  if (isError) {
+    return <div><h1>this is error </h1></div>;
+  }
+
   if (isLoading) {
     return <div><h1>this is loading </h1></div>;
   }
+
+
 
   if (islogout) {
     navigate('/')
@@ -286,7 +297,7 @@ const Modeldata = {
       <NavbarC toggleSidebar={toggleSidebar} />
       <div className="row">
       <div className={`col-md-3 col-lg-2 h-100 sidebar ${sidebarOpen ? 'open' : ''}`}>
-          <SideBar classSelect={classSelect} SetMember={SetMember} SetMemberData={SetMemberData} />
+          <SideBar classSelect={classSelect} SetMember={SetMember}  SetMemberData={SetMemberData} />
         </div>
 
         <div className="col-md-9 col-lg-10 main-content">
@@ -296,7 +307,7 @@ const Modeldata = {
 
          
  
-          <SectionTitle  data={Modeldata} onChatRoom={onChatRoom} />
+          <SectionTitle  data={Modeldata} onChatRoom={onChatRoom} cname={cname} />
           <div>
           {showChatroom ? <ChatroomWindow onChatRoom={onChatRoom} data={Modeldata} sendMessage={sendMessage} messages={messages} getMsg={getMsg} /> : <p></p> }
           {postV ? <Post data={postData} member={Modeldata.member} closePost={closePost} onPostDel={onPostDel} onPostEdit={onPostEdit} /> : (curentSection === "classroom" && <Cards data={currentclass} member={Modeldata} postClick={postClick} />)}

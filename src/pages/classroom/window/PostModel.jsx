@@ -79,7 +79,7 @@ export default function PostModel({data,postEdit, handleCloseModal }) {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("descript", descript);
-      formData.append("classroom_id", data.class);
+      formData.append("classroom_id", data.class_id);
       formData.append("professor_id", data.member);
       formData.append("file", file);
       formData.append('freeName',freeName);
@@ -134,7 +134,7 @@ export default function PostModel({data,postEdit, handleCloseModal }) {
       const formData = new FormData();
       formData.append("title", title);
       formData.append("descript", descript);
-      formData.append("classroom_id", data.class);
+      formData.append("classroom_id", data.class_id);
       formData.append("professor_id", data.member);
       formData.append('submission',date)
       formData.append("file", file);

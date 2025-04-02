@@ -33,8 +33,11 @@ async function setTempSignup(email, pass, uuid, otp) {
 
 }
 
+
+
+
 async function getOtp(admin_id) {
-  const [result] = await pool.query(`SELECT otp FROM temp_admins WHERE admin_id= ?`, [admin_id])
+  const [result] = await pool.query(`SELECT * FROM temp_admins WHERE admin_id= ?`, [admin_id])
   return result
 }
 
@@ -241,6 +244,13 @@ async function studentAssign(member_id, assign_id, assign_status) {
   return result ;
 }
 
+
+async function assignSubmitList(assign_id) {
+  const [result] = await pool.query(`SELECT * FROM assign_completes WHERE  assign_id = ?`, [assign_id])
+  return result ;
+}
+
+
 async function getPosts(class_id) {
   const result = await pool.query(`SELECT * FROM posts WHERE classroom_id = ?`, [class_id])
   return result;
@@ -341,7 +351,7 @@ export {
   createMeet, checkMeet, editPost, delPost,
   createLecture, takeAttend , getLecture,studentAssign,
   takerecord,startRecord, getAllAttendance,
-  videolecture, checkassign
+  videolecture, checkassign,assignSubmitList
 };
 
 

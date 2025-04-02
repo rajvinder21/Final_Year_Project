@@ -8,7 +8,7 @@ import { uploadFile,downloadFile } from "../../service/cloudserver.js";
 import { createPostWithFile,createAssignment,
   getPosts,getAssignments, editPost,
    delPost, delAssign,getMemberName,submitAssignment,studentAssign,
-   getLecture ,getAllAttendance,videolecture,checkassign} from "../../db.js";
+   getLecture ,getAllAttendance,videolecture,checkassign,assignSubmitList} from "../../db.js";
 import { v4 as uuidv4 } from "uuid";
 
  
@@ -398,11 +398,22 @@ router.post("/submitassignment", upload.single("file"), async (req, res) => {
     res.send("failed")
   }
 
-  
-
-
 })
 
+
+
+router.get('/getassignresult', async (req,res)=>{
+  const classroom_id = req.headers.classroom_id ;
+  const assign_id = req.headers.assign_id
+
+  const data = await assignSubmitList(assign_id);
+ 
+
+  res.send(data)
+  res.status(200)
+  
+
+})
 
 // router.get('/getclassattendlist', async (req,res)=>{
 //   const classroom_id = req.headers.classroom_id ;

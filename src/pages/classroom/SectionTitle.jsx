@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 
 
-export default function SectionTitle({ data, onChatRoom }) {
+export default function SectionTitle({ data, onChatRoom,cname }) {
 
   console.log("i go this ", data.member.startsWith('prof'));
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ export default function SectionTitle({ data, onChatRoom }) {
           {/* Title Section */}
           <div className="section-title mb-3">
             <h3 className="h4 fw-bold text-dark mb-2">
-              Science
+            {cname}
               <div className="title-underline"></div>
             </h3>
           </div>

@@ -1,15 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios, { Axios } from "axios";
 
 const SubmittedAssignments = ({data,member, closeAssignt}) => {
-  const [assignments, setAssignments] = useState([
-    { id: 1, studentName: "John Doe", title: "Math Homework", date: "2025-03-30" },
-    { id: 2, studentName: "Jane Smith", title: "Physics Lab Report", date: "2025-03-29" },
-    { id: 3, studentName: "Alice Johnson", title: "History Essay", date: "2025-03-28" },
-  ]);
+  const [list,setList] = useState([]);
+   const [isError, setIsError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+ 
+  useEffect( ()=>{
+    async function myget() {
+      console.log(data.assign_id);
+      
+      setIsLoading(true)
+      axios.get('/classroom/getassignresult', {
+        headers:{
+          "assign_id":data.assign_id ,
+        }
+      })
+
+        .then((response) => {
+          console.log( response)
+          setList(response.data)
+
+
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsError(true)
+
+
+        })
+        .finally(() => {
+          setIsLoading(false)
+
+        })
+    }
+    myget()
+
+  },[])
+
 
 function onClose() {
   closeAssignt();
 
+}
+
+if (isError) {
+  return <div><h1>this is error </h1></div>;
+}
+
+if (isLoading) {
+  return <div><h1>this is loading </h1></div>;
 }
 
 
@@ -22,17 +62,18 @@ function onClose() {
           <tr>
             <th>#</th>
             <th>Student Name</th>
-            <th>Assignment Title</th>
+            
             <th>Submission Date</th>
+            <th>File</th>
           </tr>
         </thead>
         <tbody>
-          {assignments.map((assignment, index) => (
+          {list.map((assignment, index) => (
             <tr key={assignment.id}>
               <td>{index + 1}</td>
-              <td>{assignment.studentName}</td>
-              <td>{assignment.title}</td>
+              <td>{assignment.Student_name}</td>
               <td>{assignment.date}</td>
+              <td><a href={assignment.link}>Link</a></td>
             </tr>
           ))}
         </tbody>

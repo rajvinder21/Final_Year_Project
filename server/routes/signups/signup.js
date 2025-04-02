@@ -33,6 +33,8 @@ let data ={
   const row = await setTempSignup(email,password,uuid,otp);
   console.log(row);
 
+  
+
   if(row == false){
     data ={
       success: false,
