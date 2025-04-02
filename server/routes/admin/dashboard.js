@@ -145,6 +145,8 @@ router.post("/editmember", async (req,res)=>{
   if(role === "Student"){
     console.log("studnet want edit",fname, lname, email, myclass, gender,password,professor_id );
     const result = await editStudent(fname, lname, email, myclass, gender,password,block,professor_id)
+   console.log("edit result",result);
+   
     if (result.chagedRow == 1){
       success = true; 
     }

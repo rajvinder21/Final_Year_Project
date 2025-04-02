@@ -109,48 +109,192 @@ export default function EditMember({data, onEditMemberCancel}) {
 
   return (
     <div>
-        <form>
-        <h2>Editing {data.fname } {data.lname} </h2> 
-              <label>First Name</label>
+      <div style={{
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh', // Full viewport height to center vertically
+  backgroundColor: '#f5f5f5'
+}}>
+  <div style={{
+    width: '500px',
+    padding: '20px',
+    borderRadius: '8px',
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    textAlign: 'center'
+  }}>
+    <h2 style={{ fontSize: '20px', marginBottom: '20px' }}>Editing {data.fname} {data.lname}</h2>
+    <form style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      {/* First Name */}
+      <div>
+        <label htmlFor="first-name" style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>First Name</label>
+        <input
+          id="first-name"
+          type="text"
+          value={Mfname}
+          onChange={(e) => { setMFname(e.target.value) }}
+          style={{
+            width: '100%',
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px'
+          }}
+        />
+      </div>
 
-              <input type='text' value={Mfname} onChange={(e) => { setMFname(e.target.value) }} />
+      {/* Last Name */}
+      <div>
+        <label htmlFor="last-name" style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Last Name</label>
+        <input
+          id="last-name"
+          type="text"
+          value={Mlname}
+          onChange={(e) => { setMLname(e.target.value) }}
+          style={{
+            width: '100%',
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px'
+          }}
+        />
+      </div>
 
-              <label>Last Name</label>
-              <input type='text' value={Mlname} onChange={(e) => { setMLname(e.target.value) }} />
+      {/* Email */}
+      <div>
+        <label htmlFor="email" style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Email</label>
+        <input
+          id="email"
+          type="text"
+          value={Memail}
+          onChange={(e) => { setMEmail(e.target.value) }}
+          style={{
+            width: '100%',
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px'
+          }}
+        />
+      </div>
 
-              <label>Email</label>
-              <input type='text' value={Memail} onChange={(e) => { setMEmail(e.target.value) }} />
-           
-              <label>Password</label>
-              <input type='text' value={password} onChange={(e) => { setPassword(e.target.value) }} />
-              <label>Class</label>
-              <input type='text' value={Mmyclass} onChange={(e) => { setMMyclass(e.target.value) }} />
+      {/* Password */}
+      <div>
+        <label htmlFor="password" style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Password</label>
+        <input
+          id="password"
+          type="text"
+          value={password}
+          onChange={(e) => { setPassword(e.target.value) }}
+          style={{
+            width: '100%',
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px'
+          }}
+        />
+      </div>
 
-              <label>Gender</label>
-              <select name='gender' value={Mgender} onChange={(e) => { setMGender(e.target.value) }}>
-                <option value="Male" >Male</option>
-                <option value="Female">Female</option>
-              </select>
+      {/* Class */}
+      <div>
+        <label htmlFor="class" style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Class</label>
+        <input
+          id="class"
+          type="text"
+          value={Mmyclass}
+          onChange={(e) => { setMMyclass(e.target.value) }}
+          style={{
+            width: '100%',
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px'
+          }}
+        />
+      </div>
 
-              <label>Block</label>
-              <select name='block' value={Mblock} onChange={(e) => { setMblock(e.target.value) }}>
-                <option value="unblock" >UnBlock</option>
-                <option value="block">Block</option>
-              </select>
-              
+      {/* Gender */}
+      <div>
+        <label htmlFor="gender" style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Gender</label>
+        <select
+          id="gender"
+          name="gender"
+          value={Mgender}
+          onChange={(e) => { setMGender(e.target.value) }}
+          style={{
+            width: '100%',
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px'
+          }}
+        >
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
 
-              {/* <label>Role</label>
-              <select value={Mrole} onChange={(e) => { setMRole(e.target.value); }}>
-               
-                <option value="Professor">Professor</option>
-                <option value="Student">Student</option>
-              
-              </select> */}
+      {/* Block */}
+      <div>
+        <label htmlFor="block" style={{ fontWeight: 'bold', display: 'block', marginBottom: '5px' }}>Block</label>
+        <select
+          id="block"
+          name="block"
+          value={Mblock}
+          onChange={(e) => { setMblock(e.target.value) }}
+          style={{
+            width: '100%',
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px'
+          }}
+        >
+          <option value="unblock">UnBlock</option>
+          <option value="block">Block</option>
+        </select>
+      </div>
 
-              <button type='button' onClick={onEditMember}>Add Member</button>
-              <button type='button' onClick={onCancel}>Cancel</button>
+      {/* Buttons */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '15px' }}>
+        <button
+          type="button"
+          onClick={ (e)=>{onEditMember(e)}}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#4CAF50',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          Save Changes
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#f44336',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '4px',
+            cursor: 'pointer',
+            fontSize: '14px'
+          }}
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 
-            </form>
     </div>
   )
 }

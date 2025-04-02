@@ -80,9 +80,62 @@ export default function DeleteMember({data, onDeleteMemCancel}) {
   
     return (
     <div>
-        <h2>Do you really want to remove {data.fname} {data.lname}</h2>
+        {/* <h2>Do you really want to remove {data.fname} {data.lname}</h2>
         <button type='button ' onClick={onCancel}>Cancel</button>
-        <button type='button' onClick={onDelete}>Remove</button>
+        <button type='button' onClick={onDelete}>Remove</button> */}
+        <div style={{
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  height: '100vh', // Center vertically in the viewport
+  backgroundColor: '#f5f5f5',
+  textAlign: 'center'
+}}>
+  <h2 style={{
+    fontSize: '22px',
+    marginBottom: '20px',
+    color: '#333'
+  }}>
+    Do you really want to remove {data.fname} {data.lname}?
+  </h2>
+  <div style={{ display: 'flex', gap: '15px' }}>
+    {/* Cancel Button */}
+    <button
+      type="button"
+      onClick={onCancel}
+      style={{
+        padding: '10px 20px',
+        backgroundColor: '#4CAF50',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontSize: '16px',
+        fontWeight: 'bold'
+      }}
+    >
+      Cancel
+    </button>
+    {/* Remove Button */}
+    <button
+      type="button"
+      onClick={onDelete}
+      style={{
+        padding: '10px 20px',
+        backgroundColor: '#f44336',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
+        fontSize: '16px',
+        fontWeight: 'bold'
+      }}
+    >
+      Remove
+    </button>
+  </div>
+</div>
 
     </div>
   )

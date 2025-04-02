@@ -6,7 +6,7 @@ import OnEditBtn from './OnEditBtn';
 import Float from './Float';
 import EditMember from './EditMember';
 import DeleteMember from './DeleteMember';
-
+import Footer from '../Home_Components/Footer';
 import BlockMember from './BlockMember'
 
 
@@ -27,7 +27,7 @@ function Dashboard() {
   const [rowing, setRowing] = useState([])
   const [id, setId] = useState('');
   const [class_id, setClass_id] = useState('')
-  const [block ,setBlock] = useState(false);
+  const [block, setBlock] = useState(false);
 
   // floating window
   const [float, setFloat] = useState(false)
@@ -56,7 +56,8 @@ function Dashboard() {
   // blocking member
   const [blockMem, setBlockMem] = useState(false);
   const [blockMemData, setBlockMemData] = useState({})
-
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   useEffect(() => {
     setIsLoading(true);
     console.log("called useeffect-1");
@@ -81,18 +82,18 @@ function Dashboard() {
             setLName(response.data.lName)
             setId(response.data.admin_id)
 
-            console.log("classes we have",response.data.admin_id);
-          if(response.data.cname.length >= 1 ){
-            setRowing(response.data.cname)
-            
-            
-            setClass_id(response.data.cname[0].classroom_id)
-          }
+            console.log("classes we have", response.data.admin_id);
+            if (response.data.cname.length >= 1) {
+              setRowing(response.data.cname)
+
+
+              setClass_id(response.data.cname[0].classroom_id)
+            }
 
             // here getting classroom_id which we will have to send ADDMEMBER Function
-          //  console.log("this is class_id by default", response.data.cname[0].classroom_id);
+            //  console.log("this is class_id by default", response.data.cname[0].classroom_id);
             // const Classroom_id = useContext(response.data.cname[0].classroom_id)
-           
+
 
 
             // localStorage.setItem("class_id", response.data.cname[0].classroom_id)
@@ -300,7 +301,7 @@ function Dashboard() {
   function rowSelect(data) {
     setRowid(data)
     console.log(data);
-    
+
   }
 
   function onEditClick(row) {
@@ -315,13 +316,13 @@ function Dashboard() {
   function onSubmit() {
     console.log("eren jeger");
 
-  } 
-  
-  
+  }
+
+
   function onNotSuccess(data) {
     setOnEdit(data)
     setChange(!change)
-    
+
   }
 
 
@@ -331,7 +332,7 @@ function Dashboard() {
   //EDit
   function onEditMemberCancel(data) {
     setEditMem(data)
-   setMyrun(!myrun)
+    setMyrun(!myrun)
   }
 
   function onEditRow(row) {
@@ -345,13 +346,13 @@ function Dashboard() {
       class_id: row.classroom_id,
       password: row.password,
       professor_id: row.student_id,
-      block:row.block
+      block: row.block
     });
 
 
     setEditMem(true)
-   console.log(row.student_id);
-   
+    console.log(row.student_id);
+
 
   }
 
@@ -360,7 +361,7 @@ function Dashboard() {
     setBlockMemData({
       fname: row.fname,
       lname: row.lname,
-      professor_id:row.student_id
+      professor_id: row.student_id
     })
   }
 
@@ -376,7 +377,7 @@ function Dashboard() {
     })
 
     console.log(row.student_id);
-    
+
 
 
   }
@@ -392,10 +393,10 @@ function Dashboard() {
 
 
   if (delMem) {
-    return(
-    <div>
-      <DeleteMember data={delMemData} onDeleteMemCancel={onDeleteMemCancel} />
-    </div>);
+    return (
+      <div>
+        <DeleteMember data={delMemData} onDeleteMemCancel={onDeleteMemCancel} />
+      </div>);
   }
 
 
@@ -418,7 +419,7 @@ function Dashboard() {
 
 
 
-// editing deleting Classroom dont touch 
+  // editing deleting Classroom dont touch 
   if (float) {
     return (
       <div>
@@ -441,23 +442,152 @@ function Dashboard() {
   return (
 
     <div>
-    
-      <h1>Dashboard</h1>
-      <h3>welcome {fName} {lName}, </h3>
+      <nav style={{ backgroundColor: "#3d4da5" }} className="navbar navbar-expand-md navbar-dark p-3">
+        <div className="container-fluid">
+          {/* Logo */}
+          <a className="navbar-brand d-flex align-items-center" href="#">
+            <span className="me-2"><img src='images/logo.png' alt="Logo" /></span>
+            <h4>Dashboard</h4>
+          </a>
+
+          {/* Mobile Menu Button */}
+          <button
+            className="navbar-toggler"
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+
+          {/* Navbar Content */}
+          <div className={`collapse navbar-collapse ${isOpen ? 'show' : ''}`}>
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <a className="nav-link" href="#">Home</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">About</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="#">Learn</a>
+              </li>
+            </ul>
+            {/* Profile Icon */}
+            <div className="d-flex">
+              <span
+                className="btn btn-light rounded-circle"
+                onClick={() => setTooltipVisible(!tooltipVisible)}
+                style={{ cursor: 'pointer', position: 'relative' }}
+              >
+                A
+                {tooltipVisible && (
+
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '50%',
+                      right: '110%', /* Positioning to the left of the button */
+                      transform: 'translateY(-50%)',
+                      backgroundColor: '#fff',
+                      color: '#000',
+                      padding: '10px 20px', /* Larger padding for a bigger tooltip */
+                      borderRadius: '8px',
+                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
+                      whiteSpace: 'nowrap',
+                      fontSize: '16px', /* Bigger font size */
+                      marginRight: '10px' /* Space between the tooltip and button */
+                    }}
+                  >
+                    #{fName} {lName}
+                  </div>
+                )}
+              </span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+
+        {/* /// classroom list */}
+
+      <div style={{ margin: '20px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', backgroundColor: '#f9f9f9' }}>
+        <h3>Your Classrooms</h3>
+        {/* Scrollable container for classrooms */}
+        <div style={{
+          maxHeight: '400px', /* Adjust height based on desired space */
+          overflowY: 'auto', /* Add vertical scroll */
+          paddingRight: '10px' /* Space for scrollbar visibility */
+        }}>
+          <ul style={{ listStyleType: 'none', padding: 0 }}>
+            {rowing.length === 0 ? (
+              <p style={{ fontStyle: 'italic', color: '#555' }}>No classrooms created yet.</p>
+            ) : (
+              rowing.map((row, id) => (
+                <li
+                  key={id}
+                  onClick={() => classClicked(row.classroom_id)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '15px',
+                    margin: '10px 0',
+                    backgroundColor: class_id === row.classroom_id ? 'lightblue' : '#fff',
+                    border: '1px solid #ccc',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                  }}
+                >
+                  <div style={{ flex: 1, fontWeight: 'bold', fontSize: '16px' }}>{row.cname}</div>
+                  <div style={{ flex: 2, color: '#555', padding: '0 10px' }}>{row.description}</div>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <p
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(row.classroom_id);
+                      }}
+                      style={{
+                        color: '#f44336',
+                        cursor: 'pointer',
+                        margin: 0,
+                        padding: '5px 10px',
+                        border: '1px solid #f44336',
+                        borderRadius: '4px',
+                        backgroundColor: '#fff',
+                        textAlign: 'center'
+                      }}
+                    >
+                      Delete
+                    </p>
+                    <p
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEditClick(row);
+                      }}
+                      style={{
+                        color: '#4CAF50',
+                        cursor: 'pointer',
+                        margin: 0,
+                        padding: '5px 10px',
+                        border: '1px solid #4CAF50',
+                        borderRadius: '4px',
+                        backgroundColor: '#fff',
+                        textAlign: 'center'
+                      }}
+                    >
+                      Edit
+                    </p>
+                  </div>
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+      </div>
 
       <div>
-        <h3>Your Classrooms </h3>
-        <ul>
-          {/* Here classroom name showsss */}
-          {(rowing.length == 0) ? <p> not created any classroom</p> : rowing.map((row, id) => <li key={id} onClick={() => { classClicked(row.classroom_id) }} style={{
-            padding: '10px',
-            backgroundColor: class_id === row.classroom_id ? 'lightblue' : 'transparent',
-            
-            cursor: 'pointer'
-          }}>{row.cname} <p>{row.description}</p>  <div style={{ float: "right", display: "flex" }}><p onClick={() => { onDelete(row.classroom_id) }}>Delete </p><p onClick={() => { onEditClick(row) }}> Edit</p> </div> </li>)}
-        </ul>
-
-        <div>
+        {/* <div>
 
           <form>
             <label>Classrom Name</label>
@@ -465,95 +595,338 @@ function Dashboard() {
             <input type='text' value={descript} onChange={(e) => { setDescript(e.target.value) }} />
             <button type='button' onClick={onClicked}>Create</button>
           </form>
+        </div> */}
+
+      
+{/* /// create classroom  */}
+
+<div style={{
+          margin: '20px',
+          padding: '20px',
+          border: '1px solid #ddd',
+          borderRadius: '8px',
+          backgroundColor: '#f9f9f9',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+        }}>
+          <h3>Create Classroom</h3>
+          <form style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            {/* Classroom Name Input */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="classroom-name" style={{ fontWeight: 'bold', marginBottom: '5px' }}>Classroom Name</label>
+              <input
+                id="classroom-name"
+                type='text'
+                value={cName}
+                onChange={(e) => { setCNAme(e.target.value) }}
+                style={{
+                  padding: '10px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '14px'
+                }}
+              />
+            </div>
+
+            {/* Description Input */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="description" style={{ fontWeight: 'bold', marginBottom: '5px' }}>Description</label>
+              <input
+                id="description"
+                type='text'
+                value={descript}
+                onChange={(e) => { setDescript(e.target.value) }}
+                style={{
+                  padding: '10px',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  fontSize: '14px'
+                }}
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type='button'
+              onClick={onClicked}
+              style={{
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '4px',
+                backgroundColor: '#4CAF50',
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: '16px',
+                cursor: 'pointer',
+                alignSelf: 'flex-start'
+              }}
+            >
+              Create
+            </button>
+          </form>
         </div>
+  
+
         <br />
         <hr />
 
 
         {/* Adding Member Code here ..... */}
+        <div style={{
+  margin: '0px',
+  padding: '15px',
+  border: '1px solid #ddd',
+  borderRadius: '8px',
+  backgroundColor: '#f9f9f9',
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+  width: '100%'
+}}>
+  <h3 style={{ fontSize: '18px', marginBottom: '15px' }}>Add Member</h3>
+  <form style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+    {/* First Name and Last Name (Same Row) */}
+    <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ flex: 1 }}>
+        <label htmlFor="first-name" style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '5px', display: 'block' }}>First Name</label>
+        <input
+          id="first-name"
+          type='text'
+          value={Mfname}
+          onChange={(e) => { setMFname(e.target.value) }}
+          style={{
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px',
+            width: '100%'
+          }}
+        />
+      </div>
+      <div style={{ flex: 1 }}>
+        <label htmlFor="last-name" style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '5px', display: 'block' }}>Last Name</label>
+        <input
+          id="last-name"
+          type='text'
+          value={Mlname}
+          onChange={(e) => { setMLname(e.target.value) }}
+          style={{
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px',
+            width: '100%'
+          }}
+        />
+      </div>
+    </div>
 
-        <div>
-          <form>
-            <label>First Name</label>
+    {/* Email and Class (Same Row) */}
+    <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ flex: 1 }}>
+        <label htmlFor="email" style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '5px', display: 'block' }}>Email</label>
+        <input
+          id="email"
+          type='text'
+          value={Memail}
+          onChange={(e) => { setMEmail(e.target.value) }}
+          style={{
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px',
+            width: '100%'
+          }}
+        />
+      </div>
+      <div style={{ flex: 1 }}>
+        <label htmlFor="class" style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '5px', display: 'block' }}>Class</label>
+        <input
+          id="class"
+          type='text'
+          value={Mmyclass}
+          onChange={(e) => { setMMyclass(e.target.value) }}
+          style={{
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px',
+            width: '100%'
+          }}
+        />
+      </div>
+    </div>
 
-            <input type='text' value={Mfname} onChange={(e) => { setMFname(e.target.value) }} />
+    {/* Gender and Role (Same Row) */}
+    <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ flex: 1 }}>
+        <label htmlFor="gender" style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '5px', display: 'block' }}>Gender</label>
+        <select
+          id="gender"
+          name='gender'
+          value={Mgender}
+          onChange={(e) => { setMGender(e.target.value) }}
+          style={{
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px',
+            width: '100%'
+          }}
+        >
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </div>
+      <div style={{ flex: 1 }}>
+        <label htmlFor="role" style={{ fontWeight: 'bold', fontSize: '14px', marginBottom: '5px', display: 'block' }}>Role</label>
+        <select
+          id="role"
+          value={Mrole}
+          onChange={(e) => { setMRole(e.target.value); }}
+          style={{
+            padding: '10px',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            fontSize: '14px',
+            width: '100%'
+          }}
+        >
+          <option value="Student">Student</option>
+          <option value="Professor">Professor</option>
+        </select>
+      </div>
+    </div>
 
-            <label>Last Name</label>
-            <input type='text' value={Mlname} onChange={(e) => { setMLname(e.target.value) }} />
+    {/* Add Member Button */}
+    <button
+      type='button'
+      onClick={onAddMember}
+      style={{
+        padding: '10px',
+        border: 'none',
+        borderRadius: '4px',
+        backgroundColor: '#4CAF50',
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: '14px',
+        cursor: 'pointer',
+        alignSelf: 'flex-start'
+      }}
+    >
+      Add Member
+    </button>
+  </form>
+</div>
 
-            <label>Email</label>
-            <input type='text' value={Memail} onChange={(e) => { setMEmail(e.target.value) }} />
-            <label>Class</label>
-            <input type='text' value={Mmyclass} onChange={(e) => { setMMyclass(e.target.value) }} />
-
-            <label>Gender</label>
-            <select name='gender' value={Mgender} onChange={(e) => { setMGender(e.target.value) }}>
-              <option value="Male" >Male</option>
-              <option value="Female">Female</option>
-            </select>
-
-            <label>Role</label>
-            <select value={Mrole} onChange={(e) => { setMRole(e.target.value); }}>
-              <option value="Student">Student</option>
-              <option value="Professor">Professor</option>
-            </select>
-
-            <button type='button' onClick={onAddMember}>Add Member</button>
-
-          </form>
-
-          <hr />
-
-
-
-        </div>
 
 
 
 
       </div>
-      <div>
-        {/* This table show the student data  */}
-        <table style={tableStyle} >
-          <thead>
-            <tr>
-              {/* <th>No</th> */}
-              <th>Fname</th>
-              <th>Lname</th>
-              <th>Gender</th>
-              <th>Email Address</th>
-              <th>Password</th>
-              <th>Role</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(getMemberr.length == 0) ? <tr ><td>not created any classroom</td></tr> : getMemberr.map((row, id) => <tr key={id} onClick={() => { rowSelect(row.student_id) }} style={{
+      <div style={{
+  margin: '20px',
+  padding: '20px',
+  border: '1px solid #ddd',
+  borderRadius: '8px',
+  backgroundColor: '#f9f9f9',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
+}}>
+  <h3 style={{ fontSize: '18px', marginBottom: '15px' }}>Members</h3>
+  <table style={{
+    width: '100%',
+    borderCollapse: 'collapse',
+    backgroundColor: '#fff'
+  }}>
+    <thead>
+      <tr style={{
+        backgroundColor: '#f5f5f5',
+        fontWeight: 'bold'
+      }}>
+        <th style={{ textAlign: 'left', padding: '10px' }}>Fname</th>
+        <th style={{ textAlign: 'left', padding: '10px' }}>Lname</th>
+        <th style={{ textAlign: 'left', padding: '10px' }}>Gender</th>
+        <th style={{ textAlign: 'left', padding: '10px' }}>Email Address</th>
+        <th style={{ textAlign: 'left', padding: '10px' }}>Password</th>
+        <th style={{ textAlign: 'left', padding: '10px' }}>Role</th>
+        <th style={{ textAlign: 'left', padding: '10px' }}>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {getMemberr.length === 0 ? (
+        <tr>
+          <td colSpan="7" style={{
+            textAlign: 'center',
+            padding: '10px',
+            fontStyle: 'italic',
+            color: '#555'
+          }}>
+            No members available.
+          </td>
+        </tr>
+      ) : (
+        getMemberr.map((row, id) => (
+          <tr 
+            key={id} 
+            onClick={() => { rowSelect(row.student_id) }}
+            style={{
               padding: '10px',
-              backgroundColor: rowid === row.student_id ? 'lightblue' : 'transparent',
-              backgroundColor: row.block === "block" ? 'red': "none",
-              cursor: 'pointer',
-            }}  >
-              <td>{row.fname}</td>
-              <td>{row.lname}</td>
-              <td>{row.gender}</td>
-              <td>{row.email}</td>
-              <td>{row.password}</td>
-              <td>{(row.student_id && typeof row.student_id === 'string' && row.student_id.slice(0, 4) === "prof")
-                ? "Professor"
-                : "Student"}</td>
-              <td onClick={() => { onEditRow(row) }} >edit</td>
-              <td onClick={() => { onDeleteRow(row) }}>remove</td>
-              <td>{row.block == "block" ? "block": "unblocked" }</td>
-            </tr>
+              backgroundColor: row.block === "block" ? '#ffcccb' : rowid === row.student_id ? 'lightblue' : 'transparent',
+              cursor: 'pointer'
+            }}
+          >
+            <td style={{ padding: '10px' }}>{row.fname}</td>
+            <td style={{ padding: '10px' }}>{row.lname}</td>
+            <td style={{ padding: '10px' }}>{row.gender}</td>
+            <td style={{ padding: '10px' }}>{row.email}</td>
+            <td style={{ padding: '10px' }}>{row.password}</td>
+            <td style={{ padding: '10px' }}>
+              {(row.student_id && typeof row.student_id === 'string' && row.student_id.slice(0, 4) === "prof") 
+                ? "Professor" 
+                : "Student"}
+            </td>
+            <td style={{ padding: '10px' }}>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEditRow(row);
+                }}
+                style={{
+                  marginRight: '10px',
+                  padding: '5px 10px',
+                  backgroundColor: '#4CAF50',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Edit
+              </button>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteRow(row);
+                }}
+                style={{
+                  padding: '5px 10px',
+                  backgroundColor: '#f44336',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+        ))
+      )}
+    </tbody>
+  </table>
+</div>
 
-            )}
-          </tbody>
-
-        </table>
-      </div>
 
       <div>
-
+<Footer/>
       </div>
 
     </div>
