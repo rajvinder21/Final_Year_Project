@@ -218,6 +218,8 @@ const handleCloseModal = () => setShowModal(false);
 /// code for main navbar 
 
 function setCurrentSection(data) {
+  console.log("DL check for boolean",asssignV);
+  
   setCurentSection(data)
 }
 
@@ -254,9 +256,7 @@ function setCurrentSection(data) {
     );
   }
 
-  const getMsg = ()=>{
-    return messages;
-  }
+ 
 
   const sendMessage = (msg) => {
     if (msg.trim()) {
@@ -300,8 +300,24 @@ const Modeldata = {
           <div>
           {showChatroom ? <ChatroomWindow onChatRoom={onChatRoom} data={Modeldata} sendMessage={sendMessage} messages={messages} getMsg={getMsg} /> : <p></p> }
           {postV ? <Post data={postData} member={Modeldata.member} closePost={closePost} onPostDel={onPostDel} onPostEdit={onPostEdit} /> : (curentSection === "classroom" && <Cards data={currentclass} member={Modeldata} postClick={postClick} />)}
-           {asssignV ? <SubmittedAssignments data={assignData} member={Modeldata.member} closePost={closeAssignt} /> : curentSection === "work" && <WorkWindow data={currentclass} assignClick={assignClick}  />}
-            
+          {asssignV ? (
+  <SubmittedAssignments 
+    data={assignData} 
+    member={Modeldata.member} 
+    closeAssignt={closeAssignt} 
+    filePrompt={filePrompt}
+  />
+) : (
+  curentSection === "work" && (
+    <WorkWindow 
+      data={currentclass} 
+      modeldata={Modeldata} 
+      assignClick={assignClick}  
+    />
+  )
+)}
+
+
             {curentSection === "member" && <MemberWindow data={currentclass} />} {/* For "Member" */}
             {curentSection === "attendance" && <Attendance data={currentclass}/>}
             {showModal && <PostModel data={Modeldata} postEdit={postV ? (postEdit) : ({})} handleCloseModal={handleCloseModal} />}

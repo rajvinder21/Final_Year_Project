@@ -7,8 +7,8 @@ import { v2 as cloudinary } from 'cloudinary';
 import { uploadFile,downloadFile } from "../../service/cloudserver.js";
 import { createPostWithFile,createAssignment,
   getPosts,getAssignments, editPost,
-   delPost, delAssign,getMemberName,submitAssignment,
-   getLecture ,getAllAttendance,videolecture} from "../../db.js";
+   delPost, delAssign,getMemberName,submitAssignment,studentAssign,
+   getLecture ,getAllAttendance,videolecture,checkassign} from "../../db.js";
 import { v4 as uuidv4 } from "uuid";
 
  
@@ -204,11 +204,16 @@ router.get('/getpost', async (req,res)=>{
 
 router.get('/getassignment', async (req,res)=>{
   const classroom_id = req.headers.classroom_id ;
+  const member_id = req.headers.member_id ;
 
-  const data = await getAssignments(classroom_id);
+  const dataa = await getAssignments(classroom_id);
+  const done = await checkassign(classroom_id, member_id)
   // console.log(classroom_id,data);
   
-
+  const data = {
+    assign:dataa,
+    list:done
+  }
  
   res.send(data)
   res.status(200)
@@ -347,6 +352,7 @@ router.post("/createAssignment", upload.single("file"), async (req, res) => {
 router.post("/submitassignment", upload.single("file"), async (req, res) => {
   const assign_id = req.body.assign_id;
   const class_id = req.body.classroom_id;
+  const student_id = req.body.student_id ;
   const file = req.file;
   const file_name = req.body.freeName;
   const gettime = moment().format('YYYY/MM/DD HH:mm:ss')
@@ -371,8 +377,9 @@ router.post("/submitassignment", upload.single("file"), async (req, res) => {
       console.log(fileresult,fileresult.secure_url);   
       const link = fileresult.secure_url
       // adding data to database
-      const data = await submitAssignment(assign_id,link,file_name,student_id,late,gettime,"true")
+      const data = await submitAssignment(assign_id,link,student_id,student_name,gettime,"true")
       console.log("database log with file:- ", data)
+      const add = await studentAssign(student_id,assign_id,"true")
     } catch (error) {
       console.log("we got err",error);
       
@@ -515,7 +522,7 @@ router.get("/videolecture", async (req, res) => {
     });
 
     const raw = await response.json();
-
+    
     if (!raw || !raw.data) {
       return res.status(404).json({ message: "No video lectures found" });
     }

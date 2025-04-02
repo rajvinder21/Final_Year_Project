@@ -230,13 +230,24 @@ async function submitAssignment(assign_id, link, student_id,student_name, date,l
   const result = await pool.query(`INSERT INTO assign_completes(assign_id,link,student_id,Student_name,date,late) VALUES(?,?,?,?,?,?)`, [assign_id, link, student_id,student_name, date, late])
   return result
 }
+
+async function checkassign(member_id) {
+  const [result] = await pool.query(`SELECT * FROM student_assignments WHERE student_id = ?`, [member_id])
+  return result ;
+}
+
+async function studentAssign(member_id, assign_id, assign_status) {
+  const [result] = await pool.query(`INSERT INTO student_assignments(student_id ,assign_id, status)`, [member_id,assign_id,assign_status])
+  return result ;
+}
+
 async function getPosts(class_id) {
   const result = await pool.query(`SELECT * FROM posts WHERE classroom_id = ?`, [class_id])
   return result;
 }
 
 async function getAssignments(class_id) {
-  const result = await pool.query(`SELECT * FROM assignments WHERE classroom_id = ?`, [class_id])
+  const [result] = await pool.query(`SELECT * FROM assignments WHERE classroom_id = ?`, [class_id])
   return result;
 }
 
@@ -244,6 +255,8 @@ async function checkMeet(class_id, date) {
   const result = await pool.query(`SELECT * FROM meets where date = date`);
   return result;
 }
+
+
 
 async function createMeet(class_id, meeting_id, date) {
   const [check, field] = await pool.query('SELECT * FROM meets WHERE date = ? and classroom_id = ?', [date,class_id])
@@ -326,9 +339,9 @@ export {
 
   getPosts, getAssignments, delAssign,
   createMeet, checkMeet, editPost, delPost,
-  createLecture, takeAttend , getLecture,
+  createLecture, takeAttend , getLecture,studentAssign,
   takerecord,startRecord, getAllAttendance,
-  videolecture
+  videolecture, checkassign
 };
 
 
