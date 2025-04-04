@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios, { Axios } from "axios";
 import { useNavigate } from 'react-router-dom';
-
+import "./classroom.css"
 function Cards({ data, postClick }) {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -9,6 +9,7 @@ function Cards({ data, postClick }) {
   const [lectList, setLectList] = useState([])
   const [active, setActive] = useState("posts");
   const [meeting_id, setMeeting_id] = useState([])
+
   const navigate = useNavigate();
 
 

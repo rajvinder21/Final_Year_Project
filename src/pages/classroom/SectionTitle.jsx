@@ -1,9 +1,10 @@
 import React from 'react'
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import "./classroom.css";
 
 
-export default function SectionTitle({ data, onChatRoom,cname }) {
+export default function SectionTitle({ data, onChatRoom, cname }) {
 
   console.log("i go this ", data.member.startsWith('prof'));
   const navigate = useNavigate();
@@ -32,38 +33,24 @@ export default function SectionTitle({ data, onChatRoom,cname }) {
   return (
 
     <div>
-      <div
-        className="d-flex justify-content-between align-items-center mb-4 p-4 rounded-3 shadow-sm position-relative"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95))')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
-        <div className="position-relative w-100">
-          {/* Title Section */}
-          <div className="section-title mb-3">
-            <h3 className="h4 fw-bold text-dark mb-2">
-            {cname}
-              <div className="title-underline"></div>
-            </h3>
-          </div>
 
-          {/* Buttons Section - Updated for visibility */}
-          <div className="d-flex gap-3">
-            <button onClick={handleJoin} className="btn btn-primary px-4 py-2 hover-lift">
-              <i className="bi bi-camera-video-fill me-2"></i>
-              <span>Join Call</span>
-            </button>
-            {!(data.member.startsWith("prof")) && (
-              <button className="btn btn-success px-4 py-2 hover-lift" onClick={onChatClick}>
-                <i className="bi bi-chat-dots-fill me-2"></i>
-                <span>Chat</span>
-              </button>
+      <div className="banner-section">
+        <h2 className="banner-title">{cname}</h2>
+        <div className="banner-buttons">
+          <button className="primary-btn " onClick={()=>{handleJoin()}}><i className="bi bi-camera-video-fill me-2"></i>
+          <span>Join Call</span></button>
+
+          {!(data.member.startsWith("prof")) && (
+            <button onClick={()=>{onChatClick()}} className="secondary-btn"><i className="bi bi-chat-dots-fill me-2"></i>
+            <span>Chat</span></button>
             )}
-          </div>
+
+         
         </div>
       </div>
+
+
+      
 
       <style>
         {`

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 ;
-
+import './classroom.css';
 import { useNavigate, Link,data } from "react-router-dom";
 
-export default function MainNavbar({setCurrentSection,onLogout,data}) {
+export default function MainNavbar({setCurrentSection,onLogout,data,memberName}) {
+  const [tool, setTool] = useState(false)
    const navigate = useNavigate();
 
   
@@ -34,24 +35,43 @@ export default function MainNavbar({setCurrentSection,onLogout,data}) {
 
   return (
     <div>
-        
-        <div className="d-none d-md-flex justify-content-between align-items-center mb-4">
-    <h5>@ Virtual Classroom</h5>
 
-    {/* This is the section where the links will be added */}
-    <div className="d-flex justify-content-center mx-auto ">
-    
-      <a className="nav-link px-3" href="#" onClick={onClassroomClick}>Classroom </a>
-      <a className="nav-link px-3" href="#" onClick={onWork}> Work </a>
-      <a className="nav-link px-2" href="#" onClick={onMember}> Member</a>
-      {data.member?.substring(0, 4) === "prof" ? (
-  <a className="nav-link px-2" href="#" onClick={onAttendance}> 
+<nav className="custom-navbar">
+      {/* Left: Logo */}
+      <div className="navbar-logo">
+        <img src="/images/logo.png" alt="Logo" className="logo" />
+        <h3 style={{display:"inline"}}>Classrom</h3>
+      </div>
+
+      {/* Center: Navigation Links */}
+      <ul className="nav-links">
+        <li><a  href="#" onClick={onClassroomClick}>Classroom </a></li>
+        <li> <a  href="#" onClick={onWork}> Work </a></li>
+        <li>  <a  href="#" onClick={onMember}> Member</a></li>
+        {data.member?.substring(0, 4) === "prof" ? (<li>
+  <a  href="#" onClick={onAttendance}> 
     Attendance
   </a>
-) : null}    </div>
+  </li>
+) : null}
+        
+      </ul>
 
-    <button className="btn btn-outline-secondary" onClick={logout}>Logout</button>
-  </div>
+      {/* Right: Profile Icon */}
+      <div className="avatar-container">
+        <button className="avatar-btn" onClick={()=>{setTool(!tool)}}>A</button>
+      </div>
+
+      {tool && (
+          <div className="tooltip-dropdown">
+            <p className="tooltip-name" >Member Name:- {memberName}r</p>
+            <button className="logout-btn" onClick={logout}>Logout</button>
+          </div>        
+        )}
+    </nav>
+
+        
+       
 
     </div>
   )

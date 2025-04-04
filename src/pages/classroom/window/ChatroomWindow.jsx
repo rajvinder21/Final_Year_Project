@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 
 
-function ChatroomWindow({ onChatRoom, data , sendMessage,messages }) {
+function ChatroomWindow({ onChatRoom, data , sendMessage,messages,getMsg }) {
   const [message, setMessage] = useState("");
   //  const [messages, setMessages] = useState([]);
 

@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios, { Axios } from "axios" ;
 
 import { useLocation } from "react-router-dom";
-
+import ErrorMessage from "../Home_Components/ErrorMessage";
+import LoadingMessage from "../Home_Components/Loading";
 
  
 
@@ -237,6 +238,8 @@ function SignupDetails(params) {
            
           </div>
         </div>
+       {isError && <ErrorMessage />}
+             {isLoading && <LoadingMessage />}
       </div>
       </div>
       </div>

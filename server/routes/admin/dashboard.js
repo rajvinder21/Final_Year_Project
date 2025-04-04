@@ -2,11 +2,12 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import Randomstring from "randomstring";
+import nodemailer from "nodemailer" ;
 
 import { getAdminDetail, createClassroom, getClassroom,
   createStudent, createProfessors, getMember, deladmin,editClass,
    editStudent,editProfessor,
-  delStudent,delProfessor } from "../../db.js";
+  delStudent,delProfessor,checkEmail } from "../../db.js";
 import e from "express";
 const router = express.Router();
 
@@ -71,6 +72,16 @@ router.get("/", async (req, res) => {
 })
 
 
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD,
+    },
+   
+  });
+
+
 router.post("/addmember", async (req, res, next) => {
   const fname = req.body.fname;
   const lname = req.body.lname;
@@ -79,6 +90,7 @@ router.post("/addmember", async (req, res, next) => {
   const role = req.body.role;
   const myclass = req.body.myclass;
   const class_id = req.body.class_id;
+console.log("roleeeeee",role);
 
   const password = Randomstring.generate({
     length:10,
@@ -88,14 +100,67 @@ router.post("/addmember", async (req, res, next) => {
   const professor_id = "prof"+ uuidv4();
 console.log(password);
 
- 
+  
   if (role == "Student"){
+    const check = checkEmail(email,false)
+    if(check){
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Your Virtual Classsrom Username and Password",
+        html: `
+       <div>
+        <p>Here Your User name and Password</p>
+        <p>Username:- ${email} </p>
+        <p>Password:- ${password}</p>
+        </div>
 
+      `,
+      };
+    
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log("we are done some where");
+        
+       
+      } catch (error) {
+        console.log("i got call from verfiivatopm chek",error);
+        
+        res.status(500).json({ error: "Error sending OTP", details: error.message });
+      }
+    }
     const user = await createStudent(fname, lname, email, myclass, gender, class_id,password,student_id)
     console.log(user);
     
   }
   else if (role == "Professor") {
+    const check = checkEmail(email,true)
+    if(check){
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Your Virtual Classsrom Username and Password",
+        html: `
+       <div> 
+        <p>Here Your User name and Password</p>
+        <p>Username:- ${email} </p>
+        <p>Password:- ${password}</p>
+        </div>
+
+      `,
+      };
+    
+      try {
+        await transporter.sendMail(mailOptions);
+        console.log("we are done some where");
+        
+       
+      } catch (error) {
+        console.log("i got call from verfiivatopm chek",error);
+        
+        res.status(500).json({ error: "Error sending OTP", details: error.message });
+      }
+    }
     const users = await createProfessors(fname, lname, email, myclass, gender, class_id,password,professor_id)
     console.log("we set profesffor",users);
   }
@@ -121,7 +186,7 @@ const class_id = req.headers.class_id ;
 console.log(req.headers.class_id);
 
 const user = await getMember(class_id)
-console.log("Db member data ",user);
+// console.log("Db member data ",user);
 // console.log("got requested");
 
 
@@ -141,6 +206,8 @@ router.post("/editmember", async (req,res)=>{
   const password = req.body.password;
   const block = req.body.block ;
   let success = false;
+  console.log("roleeeeeeee", role);
+  
 
   if(role === "Student"){
     console.log("studnet want edit",fname, lname, email, myclass, gender,password,professor_id );

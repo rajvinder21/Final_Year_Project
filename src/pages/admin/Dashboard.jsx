@@ -8,8 +8,9 @@ import EditMember from './EditMember';
 import DeleteMember from './DeleteMember';
 import Footer from '../Home_Components/Footer';
 import BlockMember from './BlockMember'
-
-
+import Cookies from 'js-cookie';
+import ErrorMessage from '../Home_Components/ErrorMessage';
+import LoadingMessage from '../Home_Components/Loading';
 
 function Dashboard() {
 
@@ -213,13 +214,13 @@ function Dashboard() {
 
   }
 
-  if (isLoading) {
-    return <div><h1>this is loading </h1></div>;
-  }
+  // if (isLoading) {
+  //   return <div><h1>this is loading </h1></div>;
+  // }
 
-  if (isError) {
-    return <div><h1>surprise we got error </h1></div>
-  }
+  // if (isError) {
+  //   return <div><h1>surprise we got error </h1></div>
+  // }
 
   function onClicked(e) {
     e.preventDefault();
@@ -346,7 +347,8 @@ function Dashboard() {
       class_id: row.classroom_id,
       password: row.password,
       professor_id: row.student_id,
-      block: row.block
+      block: row.block,
+      
     });
 
 
@@ -389,6 +391,12 @@ function Dashboard() {
 
   function onBlockMemCancel(data) {
     setBlockMem(data)
+  }
+
+  function onLogout() {
+     Cookies.remove('jwt');
+     navigate('/admin-login');
+
   }
 
 
@@ -442,6 +450,8 @@ function Dashboard() {
   return (
 
     <div>
+      {isError && <ErrorMessage />}
+      {isLoading && <LoadingMessage />}
       <nav style={{ backgroundColor: "#3d4da5" }} className="navbar navbar-expand-md navbar-dark p-3">
         <div className="container-fluid">
           {/* Logo */}
@@ -498,7 +508,8 @@ function Dashboard() {
                       marginRight: '10px' /* Space between the tooltip and button */
                     }}
                   >
-                    #{fName} {lName}
+                    #{fName} {lName} <br/>
+                    <button onClick={()=>[onLogout()]}>Log out</button>
                   </div>
                 )}
               </span>
@@ -506,7 +517,7 @@ function Dashboard() {
           </div>
         </div>
       </nav>
-
+      
 
         {/* /// classroom list */}
 
@@ -585,7 +596,7 @@ function Dashboard() {
           </ul>
         </div>
       </div>
-
+    
       <div>
         {/* <div>
 
@@ -865,7 +876,7 @@ function Dashboard() {
         getMemberr.map((row, id) => (
           <tr 
             key={id} 
-            onClick={() => { rowSelect(row.student_id) }}
+            onClick={() => { rowSelect(row.student_id || row.professor_id) }}
             style={{
               padding: '10px',
               backgroundColor: row.block === "block" ? '#ffcccb' : rowid === row.student_id ? 'lightblue' : 'transparent',

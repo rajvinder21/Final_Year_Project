@@ -19,7 +19,7 @@ export default function SideBar({classSelect, SetMember,SetMemberData}) {
       axios.get('/classroom/getclassroom')
 
         .then((response) => {
-          console.log("ggetclassroom", response.data.classrooms[0].classroom_id);
+          console.log("ggetclassroom", response.data);
 
 
           setclassrooms(response.data.classrooms);

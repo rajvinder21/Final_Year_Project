@@ -175,7 +175,7 @@ const handleFileChange = (e) => {
    <div>
 
 <br/>
-<h2>Assignments</h2>
+
        {/* this is Assignment Carddd */}
        {(list.length == 0) ? <p> not created any classroom</p> : list.map((row, id) => <div key={id} className="container my-4">
       <div className="card horizontal-card mb-3">

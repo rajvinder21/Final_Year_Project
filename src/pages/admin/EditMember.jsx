@@ -34,7 +34,7 @@ export default function EditMember({data, onEditMemberCancel}) {
         email: Memail,
         class_id: item,
         gender: Mgender,
-        role: Mrole,
+        role: data.professor_id.startsWith("prof") ? "Professor": "Student",
         myclass: Mmyclass,
         password:password,
         professor_id: data.professor_id,
@@ -97,8 +97,16 @@ export default function EditMember({data, onEditMemberCancel}) {
 
   if (done){
     return(
-<div>
-  <h2>Sucessfully Edited </h2>
+
+<div style={{
+    width: '500px',
+    padding: '20px',
+    borderRadius: '8px',
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    textAlign: 'center'
+  }}>
+    <h2 style={{ fontSize: '20px', marginBottom: '20px' }}>Sucessfully Edited </h2>
   <button type='button' onClick={onCancel}>Go Back</button>
 
 </div>

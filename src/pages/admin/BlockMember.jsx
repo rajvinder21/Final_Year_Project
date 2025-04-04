@@ -60,13 +60,13 @@ export default function BlockMember({ data, onBlockMemCancel }) {
 
   }
 
-  if (isLoading) {
-    return <div><h1>this is loading </h1></div>;
-  }
+  // if (isLoading) {
+  //   return <div><h1>this is loading </h1></div>;
+  // }
 
-  if (isError) {
-    return <div><h1>surprise we got error </h1></div>
-  }
+  // if (isError) {
+  //   return <div><h1>surprise we got error </h1></div>
+  // }
 
   if (done) {
     return (

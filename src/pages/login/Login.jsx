@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios, { Axios } from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../Home_Components/Footer";
+import LoadingMessage from "../Home_Components/Loading";
+import ErrorMessage from "../Home_Components/ErrorMessage" ;
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -32,11 +34,20 @@ function Login() {
           }
         )
           .then((res) => {
-            console.log(res);
+            console.log("we got response 36", res);
             success = res.headers.success;
-            if (!success) {
-              emError(true)
+            if (success === "false") {
+              setEmError(true)
             }
+
+            else {
+              setEmError(false)
+
+              navigate("/classroom")
+
+            }
+
+
             console.log(success);
 
 
@@ -71,13 +82,7 @@ function Login() {
 
       finally {
         setIsLoading(false)
-        if (!isError) {
-          if (success) {
-            navigate("/classroom")
-          }
-          
 
-        }
       }
 
 
@@ -92,27 +97,33 @@ function Login() {
 
   }
 
-  if (isError) {
-    console.log("this is place");
 
-    return <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100vh",
-      backgroundColor: "#4b4342",
-    }}><h1>something went wrong </h1></div>;
-  }
 
-  if (isLoading) {
-    return <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100vh",
-      backgroundColor: "#4b4342",
-    }}><h1>this is loading </h1></div>;
-  }
+
+
+
+
+  // if (isError) {
+  //   console.log("this is place");
+
+  //   return <div style={{
+  //     display: "flex",
+  //     justifyContent: "center",
+  //     alignItems: "center",
+  //     height: "100vh",
+  //     backgroundColor: "#4b4342",
+  //   }}><h1>something went wrong </h1></div>;
+  // }
+
+  // if (isLoading) {
+  //   return <div style={{
+  //     display: "flex",
+  //     justifyContent: "center",
+  //     alignItems: "center",
+  //     height: "100vh",
+  //     backgroundColor: "#4b4342",
+  //   }}><h1>this is loading </h1></div>;
+  // }
 
 
 
@@ -142,6 +153,9 @@ function Login() {
         height: "100vh",
         backgroundColor: "#4b4342",
       }}>
+
+      {isLoading && <LoadingMessage />}
+      {isError && <ErrorMessage/> }
         <div style={{
           backgroundColor: "#6b6362",
           padding: "40px",
@@ -171,10 +185,11 @@ function Login() {
                 required
               />
             </div>
-            <button type="submit" onClick={ (e)=>{btnClicked(e)}} className="btn btn-primary w-100">Next</button>
+        
+            <button type="submit" onClick={(e) => { btnClicked(e) }} className="btn btn-primary w-100">Next</button>
           </form>
           <p className="mt-3" style={{ color: "white" }}>
-            
+
             {emError && <p>Email or Password is Wrong</p>}
           </p>
 

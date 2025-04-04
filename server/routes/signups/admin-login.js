@@ -11,15 +11,12 @@ router.post("/", async (req, res) => {
     if (notes.length == 0) {
         res.setHeader('navigate', "/login")
         console.log("wrong");
-
-
     }
 
     else {
         const adminid = notes[0].admin_id ;
         const emailid = notes[0].email ;
         console.log(adminid,email);
-        
         const token = createToken(adminid,emailid)
         res.cookie('jwt',token, {maxAge: 1*24*60*60*1000}),
         res.setHeader('navigat', "/dashboard")
@@ -32,7 +29,5 @@ router.post("/", async (req, res) => {
     res.send()
 
 })
-
-
 
 export default router;

@@ -87,24 +87,39 @@ export default function OnEditBtn({ data, onSubmit, onNotSuccess }) {
 
   if (done) {
     return (
-      <div>
-        <h2>Sucessfully Edited </h2>
-        <button type='button' onClick={onCancel}>Go Back</button>
+        <div>
+          <h2>Sucessfully Edited </h2>
+          <button type='button' onClick={onCancel}>Go Back</button>
 
-      </div>
+        </div>
     );
   }
   return (
-    <div >
-      <h3>Editing {name}</h3>
-      <form>
-        <label>Classroom Name</label>
-        <input type='text' value={name} onChange={(e) => { setName(e.target.value) }} />
-        <label>Description </label>
-        <input type='textarea' value={descript} onChange={(e) => { setDescript(e.target.value) }} />
-        <button type="button" onClick={onEdit}>Submit</button>
-        <button type='button' onClick={onCancel}>Cancel</button>
-      </form>
-    </div>
+    <div className="container mt-4 p-3 border rounded shadow-sm bg-light">
+    <h3 className="text-primary">Editing {name}</h3>
+    <form>
+      <div className="mb-3">
+        <label className="form-label">Classroom Name</label>
+        <input 
+          type='text' 
+          className="form-control" 
+          value={name} 
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      <div className="mb-3">
+        <label className="form-label">Description</label>
+        <textarea 
+          className="form-control" 
+          value={descript} 
+          onChange={(e) => setDescript(e.target.value)}
+        />
+      </div>
+      <button type="button" className="btn btn-primary me-2" onClick={onEdit}>Submit</button>
+      <button type="button" className="btn btn-secondary" onClick={onCancel}>Cancel</button>
+    </form>
+
+
+  </div>
   )
 }

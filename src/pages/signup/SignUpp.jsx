@@ -3,7 +3,8 @@ import Navbar from "../Home_Components/Navbar";
 import axios, { Axios } from "axios";
 import { useNavigate } from "react-router-dom";
 import Footer from "../Home_Components/Footer";
-
+import ErrorMessage from "../Home_Components/ErrorMessage";
+import LoadingMessage from "../Home_Components/Loading";
 
 
 
@@ -113,24 +114,24 @@ function SignUpp() {
 
   
 
-  if (isError) {
-    console.log("this is place");
+  // if (isError) {
+  //   console.log("this is place");
 
-    return <div><h1>something went wrong </h1></div>;
-  }
+  //   return <div><h1>something went wrong </h1></div>;
+  // }
 
-  if (isLoading) {
+  // if (isLoading) {
 
-    return (
-    <div style={{
-      backgroundColor: "#3d4da5",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100vh",
-    }}><div><h1>this is loading </h1></div></div>
-    );
-  }
+  //   return (
+  //   <div style={{
+  //     backgroundColor: "#3d4da5",
+  //     display: "flex",
+  //     justifyContent: "center",
+  //     alignItems: "center",
+  //     height: "100vh",
+  //   }}><div><h1>this is loading </h1></div></div>
+  //   );
+  // }
 
   return (
     // <div>
@@ -215,6 +216,8 @@ function SignUpp() {
         </div>
       </div>
       </div>
+      {isError && <ErrorMessage />}
+      {isLoading && <LoadingMessage />}
       <Footer />
     </div>
   );

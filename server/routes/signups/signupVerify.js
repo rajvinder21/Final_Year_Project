@@ -1,6 +1,7 @@
 import express from "express";
 import nodemailer from "nodemailer" ;
-import { getOtp } from "../../db.js"
+import { getOtp,getUserbyEmail,updatePassword } from "../../db.js"
+import Randomstring from "randomstring";
 const router = express.Router();
 
 const transporter = nodemailer.createTransport({
@@ -77,5 +78,54 @@ router.post("/", async (req, res, next) => {
 
 
 });
+
+router.post("/forget", async (req, res) => {
+  const email = req.body.email;
+   const password = Randomstring.generate({
+      length:10,
+      charset: ['numeric', '!','abc']
+    }) ;
+ 
+      const row = await getUserbyEmail(email)
+      if (row.length == 0) {
+        res.send({ mail: false })
+      }
+
+      else {
+        const mailOptions = {
+          from: process.env.EMAIL,
+          to: email,
+          subject: "Your Virtual Classsrom New Password",
+          html: `
+         <div>
+         <p>Your New password ${password}</>
+         </div>
+        `,
+        };
+      
+        try {
+          await transporter.sendMail(mailOptions);
+          console.log("we are done some where");
+          
+         
+        } catch (error) {
+          console.log("i got call from verfiivatopm chek",error);
+          
+          res.status(500).json({ error: "Error sending OTP", details: error.message });
+        }
+
+        const result = await updatePassword(password,email);
+        console.log("resullttttt",result);
+        
+
+        res.send({ mail:true })
+      }
+     
+
+
+});
+
+
+
 
 export default router;

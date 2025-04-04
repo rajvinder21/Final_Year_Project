@@ -452,8 +452,8 @@ button {
       <nav className="navbar navbar-dark bg-dark shadow-sm py-3">
         <div className="container">
           {/* Logo */}
-          <a className="navbar-brand" href="#">Company Logo</a>
-    
+          <a className="navbar-brand" href="#">Lecture</a>
+        
           <div>
             <button
               onClick={()=>{startRecord()}}

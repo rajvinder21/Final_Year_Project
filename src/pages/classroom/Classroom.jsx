@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { Link, useNavigate } from "react-router-dom";
 import axios, { Axios } from "axios";
+import "./classroom.css"
 
 
 import SideBar from './SideBar'
@@ -232,6 +233,7 @@ function setCurrentSection(data) {
 
   function onLogout() {
     Cookies.remove('jwt');
+    navigate("/login")
     setisLogout(true)
 
   }
@@ -293,24 +295,33 @@ const Modeldata = {
 
 
   return (
-    <div className="container-fluid">
+
+
+    <div>
+
+    <NavbarC toggleSidebar={toggleSidebar} />
+
+    <MainNavbar setCurrentSection={setCurrentSection} onLogout={onLogout} data={Modeldata} memberName={Modeldata.memberName}/>
+
+    <div style={{backgroundColor: "#f8f9fa"}} className="container-fluid">
     
-      <NavbarC toggleSidebar={toggleSidebar} />
+   
+
+     
       <div className="row">
-      <div className={`col-md-3 col-lg-2 h-100 sidebar ${sidebarOpen ? 'open' : ''}`}>
+      <div  className={`col-md-3 col-lg-2  sidebar ${sidebarOpen ? 'open' : ''}`}>
           <SideBar classSelect={classSelect} SetMember={SetMember}  SetMemberData={SetMemberData} />
         </div>
 
-        <div className="col-md-9 col-lg-10 main-content">
+        <div style={{backgroundColor: "white"}} className="col-md-9 col-lg-10 main-content">
      
-          <MainNavbar setCurrentSection={setCurrentSection} onLogout={onLogout} data={Modeldata}/>
       
 
          
  
           <SectionTitle  data={Modeldata} onChatRoom={onChatRoom} cname={cname} />
           <div>
-          {showChatroom ? <ChatroomWindow onChatRoom={onChatRoom} data={Modeldata} sendMessage={sendMessage} messages={messages} getMsg={getMsg} /> : <p></p> }
+          {showChatroom ? <ChatroomWindow onChatRoom={onChatRoom} data={Modeldata} sendMessage={sendMessage} messages={messages}  /> : <p></p> }
           {postV ? <Post data={postData} member={Modeldata.member} closePost={closePost} onPostDel={onPostDel} onPostEdit={onPostEdit} /> : (curentSection === "classroom" && <Cards data={currentclass} member={Modeldata} postClick={postClick} />)}
           {asssignV ? (
   <SubmittedAssignments 
@@ -351,6 +362,9 @@ const Modeldata = {
           <FooterClassroom />
         </div>
       </div>
+    </div>
+
+
     </div>
   )
 }

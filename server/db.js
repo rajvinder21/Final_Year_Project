@@ -3,7 +3,7 @@
 import { v4 as uuidv4 } from "uuid";
 import mysql from 'mysql2';
 import { populate } from "dotenv";
-// import mysql from 'mysql';
+
 
 
 
@@ -34,7 +34,10 @@ async function setTempSignup(email, pass, uuid, otp) {
 }
 
 
-
+async function getUserbyEmail(email) {
+  const [result] = await pool.query(`SELECT * FROM admins WHERE email = ?`, [email])
+  return result
+}
 
 async function getOtp(admin_id) {
   const [result] = await pool.query(`SELECT * FROM temp_admins WHERE admin_id= ?`, [admin_id])
@@ -75,13 +78,35 @@ async function getClassroom(id) {
 const notes = await getUser()
 // console.log(notes);
 
+async function checkEmail(email, professor) {
+  if (professor) {
+    const [res] = await pool.query(`SELECT * FROM professors WHERE email = ?`, [email])
+  console.log(res);
+  if (res.length == 0) {
+    return true
+  }
+  else{
+    return false
+  }
+
+  } else {
+    const [res] = await pool.query(`SELECT * FROM students WHERE email = ?`, [email])
+    console.log(res);
+    if (res.length == 0) {
+      return true
+    }
+    else{
+      return false
+    }
+    
+  }
+}
 
 async function createStudent(fname, lname, email, myclass, gender, class_id, password, student_id) {
   // checking if data is already there
   const [res] = await pool.query(`SELECT * FROM students WHERE email = ?`, [email])
   console.log(res);
-
-  if (res.length == 0) {
+if (res.length == 0) {
     const [result] = await pool.query(`INSERT INTO students(student_id,fname,lname,email,password,myclass,gender) VALUES(?,?,?,?,?,?,?)`, [student_id, fname, lname, email, password, myclass, gender])
     const [results] = await pool.query(`INSERT INTO member_participants(member_id, classroom_id) VALUES(?,?)`, [student_id, class_id])
     return results
@@ -120,6 +145,7 @@ JOIN professors p ON p.professsor_id = mp.member_id
 WHERE mp.classroom_id = ?;`, [class_id, class_id])
 
   return result
+  
 
 }
 
@@ -335,6 +361,11 @@ async function videolecture(class_id) {
   return result;
 }
 
+async function updatePassword(password,email) {
+  const [result] = await pool.query(`UPDATE admins SET password = ? WHERE email = ?;`, [password,email])
+  return result ;
+}
+
 
  
 
@@ -351,7 +382,7 @@ export {
   createMeet, checkMeet, editPost, delPost,
   createLecture, takeAttend , getLecture,studentAssign,
   takerecord,startRecord, getAllAttendance,
-  videolecture, checkassign,assignSubmitList
+  videolecture, checkassign,assignSubmitList,checkEmail,getUserbyEmail, updatePassword
 };
 
 

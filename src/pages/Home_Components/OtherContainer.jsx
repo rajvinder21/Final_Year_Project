@@ -34,7 +34,7 @@ function OtherContainer(){
           </div>
         </div>
         {/* Third Section Page one  */}
-        <div className="page1-Container-3 ">
+        <div className="page1-Container-3 " id="page1-Container-3">
           {/* first row  */}
           <div className="row align-items-md-stretch myrow">
             {/* first col container  */}

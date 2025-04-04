@@ -63,13 +63,13 @@ function AddMember(props) {
 
   }
 
-  if (isLoading) {
-    return <div><h1>this is loading </h1></div>;
-  }
+  // if (isLoading) {
+  //   return <div><h1>this is loading </h1></div>;
+  // }
 
-  if (isError) {
-    return <div><h1>surprise we got an error ! </h1></div>;
-  }
+  // if (isError) {
+  //   return <div><h1>surprise we got an error ! </h1></div>;
+  // }
 
 
 
